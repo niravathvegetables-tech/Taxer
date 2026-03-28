@@ -94,7 +94,19 @@ function App() {
       if (data.tax && Array.isArray(data.tax)) {
         setTax( data.tax );
 
-                const found = data.tax.find(t => t.tax_id == formData.tax_id);
+        let companyidee = '';
+let companyname = '';
+let companytaxid = ''; 
+
+        company.forEach((com) => {
+  companyidee  = com.company_id;
+  companyname  = com.company_name;
+  companytaxid = com.tax_id;  // ← add this
+});
+
+      const found = data.tax.find(t => t.tax_id == companytaxid);
+      console.log("Found company tax: ", company);
+
       setselectedtax(found || []);
 
 
@@ -178,10 +190,10 @@ function App() {
   <Contra contra={contra} handleEdit={handleEdit} />   // ✔ correct
 )}
   {activeTab === "Purchase" && (
-  <Purchase purchase={purchase} handleEdit={handleEdit} />   // ✔ correct
+  <Purchase purchase={purchase} selectedtax={selectedtax} company={company}  handleEdit={handleEdit} />   // ✔ correct
 )}
 {activeTab === "Sales" && (
-  <Sales sales={sales} handleEdit={handleEdit} />   // ✔ correct
+  <Sales sales={sales} handleEdit={handleEdit} selectedtax={selectedtax}  />   // ✔ correct
 )}
 {activeTab === "Tax" && (
   <Tax tax={tax} handleEdit={handleEdit} />   // ✔ correct

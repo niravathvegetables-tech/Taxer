@@ -65,7 +65,7 @@ handleDelete = async (stocks_id) => {
     });
     const result = await res.json();
     if (result.success) {
-      alert("Deleted successfully!");
+     // alert("Deleted successfully!");
       this.fetchStocks(); // refresh list
     } else {
       alert("Delete failed: " + result.message);
@@ -132,7 +132,7 @@ if (formData.stocks_id) {
     const res = await fetch(url + endpoint, { method: "POST", body: data });
     const result = await res.json();
     if (result.success) {
-      alert(formData.stocks_id ? "Updated successfully!" : "Inserted successfully!");
+     // alert(formData.stocks_id ? "Updated successfully!" : "Inserted successfully!");
       //this.handleClose();
 
       this.setState({
@@ -256,11 +256,11 @@ if (formData.stocks_id) {
 
               <label>Stock Image</label>
                <div className="image-preview-box">
-  {this.state.imagePreview
-    ? <img src={this.state.imagePreview} alt="preview" width="100" />
-    : <p>No image</p>
-  }
-</div>
+                {this.state.imagePreview
+                  ? <img src={this.state.imagePreview} alt="preview" width="100" />
+                : <p>No image</p>
+                }
+              </div>
 
               <input
               type="file"
@@ -270,16 +270,16 @@ if (formData.stocks_id) {
               <input type="hidden" name="stocks_id" value={this.state.formData.stocks_id || ""} />
 
               <div className="modal-buttons">
-                <h2>{this.state.formData.stocks_id ? "Edit Stock" : "Add Stock"}</h2>
+                
 
-<button
-  className="btn-update"
-  onClick={() => this.handleUpdate()}
-  disabled={updating}
->
-  {updating ? (this.state.formData.stocks_id ? "Updating..." : "Adding...") 
-            : (this.state.formData.stocks_id ? "Update" : "Add")}
-</button>
+                  <button
+                    className="btn-update"
+                    onClick={() => this.handleUpdate()}
+                    disabled={updating}
+                  >
+                    {updating ? (this.state.formData.stocks_id ? "Updating..." : "Adding...") 
+                              : (this.state.formData.stocks_id ? "Update" : "Add")}
+                  </button>
                 <button className="btn-cancel" onClick={this.handleClose}>
                   Cancel
                 </button>

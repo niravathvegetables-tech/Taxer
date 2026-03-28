@@ -284,3 +284,231 @@
 .tax{
   background: #dcdf0c; width: 38%;
 }
+
+.purchase-inner.purchase-cell {
+  display: flex;
+  flex-direction: column; /* stack children vertically */
+  gap: 10px;              /* optional spacing between items */
+}
+
+.purchase-inner.purchase-cell label,
+.purchase-inner.purchase-cell input,
+.purchase-inner.purchase-cell select {
+  display: block;         /* ensures each element takes full width */
+  margin-bottom: 8px;     /* extra spacing if needed */
+}
+
+
+
+/* ── Wide modal for the table layout ── */
+.modal-box--wide {
+  width: 90%;
+  max-width: 820px;
+}
+
+/* ── Purchase items table ── */
+.purchase-table-wrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.purchase-table thead tr {
+  background-color: #f0f4f8;
+}
+
+.purchase-table th,
+.purchase-table td {
+  padding: 8px 10px;
+  border: 1px solid #d1d9e0;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.purchase-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.purchase-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+/* ── Inputs inside the table ── */
+.table-input {
+  width: 100%;
+  min-width: 90px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.table-input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+}
+
+/* ── Icon buttons (+  and  ✕) ── */
+.btn-icon {
+  border: none;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.btn-add-row {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.btn-add-row:hover {
+  background-color: #1558b0;
+}
+
+.btn-remove-row {
+  background-color: #e53935;
+  color: #fff;
+  font-size: 13px;
+}
+
+.btn-remove-row:hover {
+  background-color: #b71c1c;
+}
+
+
+/* ── Wide modal for the table layout ── */
+.modal-box--wide {
+  width: 90%;
+  max-width: 820px;
+}
+
+/* ── Purchase items table ── */
+.purchase-table-wrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.purchase-table thead tr {
+  background-color: #f0f4f8;
+}
+
+.purchase-table th,
+.purchase-table td {
+  padding: 8px 10px;
+  border: 1px solid #d1d9e0;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.purchase-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.purchase-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+/* ── Inputs inside the table ── */
+.table-input {
+  width: 100%;
+  min-width: 90px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.table-input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
+}
+
+/* ── Icon buttons (+  and  ✕) ── */
+.btn-icon {
+  border: none;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.btn-add-row {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.btn-add-row:hover {
+  background-color: #1558b0;
+}
+
+.btn-remove-row {
+  background-color: #e53935;
+  color: #fff;
+  font-size: 13px;
+}
+
+.btn-remove-row:hover {
+  background-color: #b71c1c;
+}
+
+/* ── Totals summary block ── */
+.purchase-totals {
+  margin-top: 16px;
+  margin-left: auto;
+  width: 280px;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-bottom: 1px solid #e8ecf0;
+  background: #fafbfc;
+}
+
+.totals-row:last-child {
+  border-bottom: none;
+}
+
+.totals-grand {
+  background: #1a73e8;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
