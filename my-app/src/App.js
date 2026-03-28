@@ -8,6 +8,7 @@ import Payment from './Payment';
 import Contra from './Contra';
 import Purchase from './Purchase';
 import Sales from './Sales';
+import Tax from './Tax';
 
 var url="http://localhost/matsio";
 
@@ -15,6 +16,7 @@ function App() {
 
    const [company, setCompany] = useState([]);
     const [stock, setstock] = useState([]);
+      const [tax, setTax] = useState([]);
     const [receipt, setReceipt] = useState([]);
      const [payment, setpayment] = useState([]);
       const [contra, setcontra] = useState([]);
@@ -102,7 +104,7 @@ function App() {
     setUpdating(false);
   }
 
-   const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra"];
+   const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra" , "Tax"];
  
 
   return (
@@ -150,6 +152,9 @@ function App() {
 )}
 {activeTab === "Sales" && (
   <Sales sales={sales} handleEdit={handleEdit} />   // ✔ correct
+)}
+{activeTab === "Tax" && (
+  <Tax tax={tax} handleEdit={handleEdit} />   // ✔ correct
 )}
 
        

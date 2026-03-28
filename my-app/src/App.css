@@ -234,8 +234,8 @@
 .company{
 
   position: relative;
-  width:100%;
-  background-color: #61dafb;
+ 
+  background-color: #61dafb;  width: 38%;
 }
 
 .tabs li{
@@ -273,3 +273,12 @@
   .payment{
     background: #f1f42f; width: 38%;
   }
+
+  .contra{
+    background: #df72b691; width: 38%;
+}
+ 
+
+.tax{
+  background: #dcdf0c; width: 38%;
+}
