@@ -242,3 +242,34 @@
   display: inline;
   padding: 1%;
 }
+
+
+.tabs ul{
+
+  color: #e11c1c;
+    background: #ecec8d;
+    width: 35%;
+}
+
+.stock{
+      background: #b1d2ef;
+       width: 38%;
+}
+
+.purchase{
+  background: #b4d4f1;
+   width: 38%;
+
+}
+
+.sales{ 
+  
+  background: #abd5d6;  width: 38%;}
+
+  .receipt{
+        background: #6eec60;  width: 38%;
+  }
+
+  .payment{
+    background: #f1f42f; width: 38%;
+  }
