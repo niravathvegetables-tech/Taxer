@@ -9,14 +9,15 @@ import Contra from './Contra';
 import Purchase from './Purchase';
 import Sales from './Sales';
 import Tax from './Tax';
-
-var url="http://localhost/matsio";
+import url from './Config';
+ 
 
 function App() {
 
    const [company, setCompany] = useState([]);
     const [stock, setstock] = useState([]);
       const [tax, setTax] = useState([]);
+      const [selectedtax, setselectedtax] = useState({});
     const [receipt, setReceipt] = useState([]);
      const [payment, setpayment] = useState([]);
       const [contra, setcontra] = useState([]);
@@ -35,6 +36,7 @@ function App() {
  const [activeTab, setActiveTab] = useState("Home");
 
     useEffect(() => {
+      fetchTax();
     fetchCompany();
   }, []);
 
@@ -58,6 +60,12 @@ function App() {
    function handleChange(e) {
       
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+     if (e.target.name === "tax_id") {
+    const found = tax.find(t => t.tax_id == e.target.value);
+    setselectedtax(found || {});
+  }
+
   }
 
    function handleEdit(com) {
@@ -66,14 +74,35 @@ function App() {
       id:       com.company_id,
       name:     com.company_name,
       trn:      com.company_trn,
-      address:      com.company_address
+      address:      com.company_address,
+      tax_id:     com.tax_id
     });
+    const found = tax.find(t => t.tax_id == com.tax_id);
+  setselectedtax(found || {});
     
   }
 
   function handleClose() {
     setEditCompany(null);
     
+  }
+
+   async function  fetchTax() {
+    try {
+      const res = await fetch(url + "/wp-json/taxer/v1/gettax");
+      const data = await res.json();
+      if (data.tax && Array.isArray(data.tax)) {
+        setTax( data.tax );
+
+                const found = data.tax.find(t => t.tax_id == formData.tax_id);
+      setselectedtax(found || []);
+
+
+
+      }
+    } catch (err) {
+      console.error("Failed to fetch tax", err);
+    }
   }
 
 
@@ -84,6 +113,7 @@ function App() {
     data.append('name',     formData.name);
     data.append('trn',  formData.trn);
    data.append('address',  formData.address);
+    data.append('tax_id',  formData.tax_id);
 
     try {
       const res = await fetch(url+`/wp-json/taxer/v1/update`, {
@@ -92,7 +122,7 @@ function App() {
       });
       const result = await res.json();
       if (result.success) {
-        alert('Updated successfully!');
+       // alert('Updated successfully!');
         handleClose();
         fetchCompany();
       } else {
@@ -133,7 +163,7 @@ function App() {
 
  
       {activeTab === "Home" && (
-        <Home company={company} handleEdit={handleEdit} />
+        <Home company={company}  selectedtax={selectedtax} handleEdit={handleEdit} />
       )}
       {activeTab === "Stock" && (
         <Stock stock={stock} handleEdit={handleEdit} company={company} />
@@ -180,7 +210,35 @@ function App() {
               <label>Adddress</label>
            <input name="address" value={formData.address} onChange={handleChange} />
 
+            <label>Tax   </label>
 
+            <select
+            name="tax_id"
+            value={formData.tax_id || ""}
+            onChange={handleChange}
+            >
+            <option value="">Select Tax  </option>
+
+           
+
+            {tax && tax.length > 0 ? (
+            tax.map((t) => (
+
+
+
+            <option key={t.tax_id} value={t.tax_id} 
+            
+              selected={t.tax_id == formData.tax_id ? 'selected' : false}
+  
+            
+            >
+            {t.tax_name} - {t.tax_percent}%
+            </option>
+            ))
+            ) : (
+            <option disabled>No tax available</option>
+            )}
+            </select>
              
 
             <div className="modal-buttons">

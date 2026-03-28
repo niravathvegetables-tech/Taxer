@@ -1,6 +1,6 @@
 import React from 'react';
 
-var url = "http://localhost/matsio";
+import url from './Config';
 
 class Tax extends React.Component {
   constructor(props) {
@@ -75,7 +75,14 @@ class Tax extends React.Component {
       const result = await res.json();
       if (result.success) {
        // alert(formData.tax_id ? "Tax updated!" : "Tax added!");
-        this.handleClose();
+       // this.handleClose();
+
+       this.setState({
+      
+      formData: { tax_id: "", tax_name: "", tax_percentage: "" }
+    });
+
+
         this.fetchTax();
       } else {
         alert("Operation failed: " + result.message);

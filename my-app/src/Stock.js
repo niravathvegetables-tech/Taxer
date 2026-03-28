@@ -1,5 +1,5 @@
 import React from "react";
-var url="http://localhost/matsio";
+import url from './Config';
 class Stock extends React.Component {
   constructor(props) {
     super(props);
@@ -133,7 +133,14 @@ if (formData.stocks_id) {
     const result = await res.json();
     if (result.success) {
       alert(formData.stocks_id ? "Updated successfully!" : "Inserted successfully!");
-      this.handleClose();
+      //this.handleClose();
+
+      this.setState({
+    
+    formData: { company_id: this.props.company?.[0]?.company_id || "" },
+    imagePreview: null
+  });
+
       this.fetchStocks();
     } else {
       alert("Operation failed: " + result.message);
