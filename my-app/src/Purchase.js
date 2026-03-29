@@ -9,6 +9,7 @@ class Purchase extends React.Component {
       updating: false,
       stocks: [],
       editpurchase: false,
+      rowErrors: {}, // ← track per-row stock errors
       formData: {
         company_id: ''
       },
@@ -22,7 +23,6 @@ class Purchase extends React.Component {
     this.fetchStocks();
   }
 
-  // Fetch all stocks for the dropdown
   fetchStocks = () => {
     fetch(url + `/wp-json/taxer/v1/getstock`)
       .then((res) => res.json())
@@ -51,6 +51,7 @@ class Purchase extends React.Component {
   handleClose = () => {
     this.setState({
       editpurchase: false,
+      rowErrors: {},
       formData: { company_id: '' },
       purchaseRows: [
         { stocks_id: '', purchase_amount: '', purchase_count: '', purchase_item_type: '', purchase_total: '' }
@@ -70,6 +71,7 @@ class Purchase extends React.Component {
 
   handleRowChange = (index, e) => {
     const { name, value } = e.target;
+
     this.setState((prevState) => {
       const updatedRows = [...prevState.purchaseRows];
       updatedRows[index] = {
@@ -77,14 +79,45 @@ class Purchase extends React.Component {
         [name]: value
       };
 
-      // Auto-calculate row total when price or count changes
+      // Auto-calculate row total
       if (name === 'purchase_amount' || name === 'purchase_count') {
         const amount = parseFloat(name === 'purchase_amount' ? value : updatedRows[index].purchase_amount) || 0;
         const count  = parseFloat(name === 'purchase_count'  ? value : updatedRows[index].purchase_count)  || 0;
         updatedRows[index].purchase_total = (amount * count).toFixed(2);
       }
 
-      return { purchaseRows: updatedRows };
+      // ── Stock availability check when purchase_count changes ──
+      let updatedErrors = { ...prevState.rowErrors };
+
+      if (name === 'purchase_count') {
+        const stocksId     = updatedRows[index].stocks_id;
+        const enteredCount = parseFloat(value) || 0;
+
+        if (stocksId && enteredCount > 0) {
+          // Use already-fetched stocks — no extra API call needed
+          const stockItem = prevState.stocks.find(
+            (s) => parseInt(s.stocks_id) === parseInt(stocksId)
+          );
+
+          if (stockItem) {
+            const available = parseFloat(stockItem.stocks_total) || 0;
+            if (enteredCount > available) {
+            //  updatedErrors[index] = `Only ${available} ${stockItem.stocks_unit || 'units'} available for "${stockItem.stocks_name}"`;
+            } else {
+              delete updatedErrors[index]; // clear error if count is valid
+            }
+          }
+        } else {
+          delete updatedErrors[index];
+        }
+      }
+
+      // Reset error when stock item selection changes
+      if (name === 'stocks_id') {
+        delete updatedErrors[index];
+      }
+
+      return { purchaseRows: updatedRows, rowErrors: updatedErrors };
     });
   };
 
@@ -99,16 +132,19 @@ class Purchase extends React.Component {
 
   removeRow = (index) => {
     this.setState((prevState) => {
-      const updatedRows = prevState.purchaseRows.filter((_, i) => i !== index);
+      const updatedRows   = prevState.purchaseRows.filter((_, i) => i !== index);
+      const updatedErrors = { ...prevState.rowErrors };
+      delete updatedErrors[index];
+
       return {
         purchaseRows: updatedRows.length > 0
           ? updatedRows
-          : [{ stocks_id: '', purchase_amount: '', purchase_count: '', purchase_item_type: '', purchase_total: '' }]
+          : [{ stocks_id: '', purchase_amount: '', purchase_count: '', purchase_item_type: '', purchase_total: '' }],
+        rowErrors: updatedErrors
       };
     });
   };
 
-  // ── Calculation helpers ──────────────────────────────────
   getSubTotal = () => {
     return this.state.purchaseRows.reduce((sum, row) => {
       return sum + (parseFloat(row.purchase_total) || 0);
@@ -122,22 +158,33 @@ class Purchase extends React.Component {
   getGrandTotal = (subTotal, taxAmount) => {
     return subTotal + taxAmount;
   };
-  // ─────────────────────────────────────────────────────────
 
   handleUpdate = async () => {
+    if (this.state.updating) return;
+
+    const { purchaseRows, rowErrors } = this.state;
+
+    // Block submit if any stock errors exist
+    if (Object.keys(rowErrors).length > 0) {
+      alert('Please fix stock availability errors before submitting.');
+      return;
+    }
+
+    // Validate all rows are filled
+    const hasEmptyRow = purchaseRows.some(row =>
+      !row.stocks_id || !row.purchase_amount || !row.purchase_count || !row.purchase_item_type
+    );
+    if (hasEmptyRow) {
+      alert('Please fill in all purchase row fields.');
+      return;
+    }
+
     this.setState({ updating: true });
 
-    const { formData, purchaseRows } = this.state;
-
-    // ── Read tax from selectedtax prop — same object App.js sets ──
-    // App.js: selectedtax = tax.find(t => t.tax_id == companytaxid)
-    // So selectedtax is a single object like { tax_id, tax_name, tax_percentage }
     const { selectedtax, company } = this.props;
 
+    const companyId     = Array.isArray(company) && company.length > 0 ? company[0].company_id : '';
     const companytaxid  = Array.isArray(company) && company.length > 0 ? company[0].tax_id : '';
-
-    // selectedtax can be an object {} or array [] depending on App.js state
-    // App.js uses: setselectedtax(found || [])  — so guard both cases
     const taxObj        = Array.isArray(selectedtax) ? selectedtax[0] : selectedtax;
     const taxPercentage = taxObj?.tax_percent ?? taxObj?.tax_percentage ?? 0;
     const taxId         = taxObj?.tax_id ?? companytaxid;
@@ -147,13 +194,13 @@ class Purchase extends React.Component {
     const grandTotal = this.getGrandTotal(subTotal, taxAmount);
 
     const payload = {
-      company_id:     formData.company_id || companytaxid,
+      company_id:     companyId,
       tax_id:         taxId,
       tax_percentage: taxPercentage,
       sub_total:      subTotal.toFixed(2),
       tax_amount:     taxAmount.toFixed(2),
       grand_total:    grandTotal.toFixed(2),
-      purchases:      purchaseRows
+      purchases:      JSON.stringify(purchaseRows)
     };
 
     console.log('Submitting payload:', payload);
@@ -165,46 +212,50 @@ class Purchase extends React.Component {
         body: JSON.stringify(payload)
       });
 
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
       const data = await response.json();
       console.log('Purchase saved:', data);
 
-      this.setState({ updating: false });
-      this.handleClose();
+      if (data.success) {
+        alert(`Purchase saved! ${data.inserted} item(s) recorded.`);
+        this.handleClose();
+      } else {
+        alert('Something went wrong: ' + (data.message || 'Unknown error'));
+        this.setState({ updating: false });
+      }
+
     } catch (error) {
       console.error('Failed to save purchase:', error);
+      alert('Failed to save purchase. Please try again.');
       this.setState({ updating: false });
     }
   };
 
   render() {
-    const { editpurchase, updating, purchaseRows, stocks } = this.state;
+    const { editpurchase, updating, purchaseRows, stocks, rowErrors } = this.state;
     const { purchase, company, selectedtax } = this.props;
 
     if (!purchase || !Array.isArray(purchase)) {
       return <p>Loading...</p>;
     }
 
-    // ── Company details ──
-    let companyidee  = '';
-    let companyname  = '';
-    let companytaxid = '';
+    let companyidee = '';
+    let companyname = '';
     company.forEach((com) => {
-      companyidee  = com.company_id;
-      companyname  = com.company_name;
-      companytaxid = com.tax_id;
+      companyidee = com.company_id;
+      companyname = com.company_name;
     });
 
-    // ── Tax details from selectedtax prop (set by App.js fetchTax/handleEdit) ──
-    // App.js does: setselectedtax(found || [])
-    // so selectedtax may be an object {} or empty array []
     const taxObj        = Array.isArray(selectedtax) ? selectedtax[0] : selectedtax;
     const taxPercentage = taxObj?.tax_percent ?? taxObj?.tax_percentage ?? 0;
     const taxName       = taxObj?.tax_name ?? '';
 
-    // ── Live totals ──
     const subTotal   = this.getSubTotal();
     const taxAmount  = this.getTaxAmount(subTotal, taxPercentage);
     const grandTotal = this.getGrandTotal(subTotal, taxAmount);
+
+    const hasErrors = Object.keys(rowErrors).length > 0;
 
     return (
       <div className='purchase'>
@@ -217,15 +268,9 @@ class Purchase extends React.Component {
             <div className="modal-box modal-box--wide">
               <h2>Add Purchase of {companyname}</h2>
 
-              {/* Company ID */}
               <label>Company ID</label>
-              <input
-                name="company_id"
-                value={companyidee}
-                readOnly
-              />
+              <input name="company_id" value={companyidee} readOnly />
 
-              {/* Tax info — from selectedtax prop passed by App.js */}
               <label>Tax</label>
               <input
                 name="tax_name"
@@ -233,7 +278,6 @@ class Purchase extends React.Component {
                 readOnly
               />
 
-              {/* Dynamic Purchase Items Table */}
               <div className="purchase-table-wrapper">
                 <table className="purchase-table">
                   <thead>
@@ -261,7 +305,6 @@ class Purchase extends React.Component {
                       <tr key={index}>
                         <td>{index + 1}</td>
 
-                        {/* Stock Item dropdown */}
                         <td>
                           <select
                             name="stocks_id"
@@ -274,7 +317,7 @@ class Purchase extends React.Component {
                             </option>
                             {stocks.map((stock) => (
                               <option key={stock.stocks_id} value={stock.stocks_id}>
-                                {stock.stocks_name}
+                                {stock.stocks_name} (Avail: {stock.stocks_total} {stock.stocks_unit})
                               </option>
                             ))}
                           </select>
@@ -292,14 +335,22 @@ class Purchase extends React.Component {
                         </td>
 
                         <td>
+                          {/* Purchase Count with inline stock error */}
                           <input
                             type="number"
                             name="purchase_count"
-                            className="table-input"
+                            className={`table-input ${rowErrors[index] ? 'input-error' : ''}`}
+                            style={ rowErrors[index] ? { borderColor: 'red' } : {} }
                             value={row.purchase_count}
                             onChange={(e) => this.handleRowChange(index, e)}
                             placeholder="0"
+                            min="0"
                           />
+                          {rowErrors[index] && (
+                            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+                              ⚠ {rowErrors[index]}
+                            </div>
+                          )}
                         </td>
 
                         <td>
@@ -343,7 +394,6 @@ class Purchase extends React.Component {
                 </table>
               </div>
 
-              {/* Totals summary — updates live as rows change */}
               <div className="purchase-totals">
                 <div className="totals-row">
                   <span>Sub Total</span>
@@ -363,11 +413,16 @@ class Purchase extends React.Component {
                 <button
                   className="btn-update"
                   onClick={this.handleUpdate}
-                  disabled={updating}
+                  disabled={updating || hasErrors}
+                  title={hasErrors ? 'Fix stock errors before submitting' : ''}
                 >
                   {updating ? "Adding..." : "Add"}
                 </button>
-                <button className="btn-cancel" onClick={this.handleClose}>
+                <button
+                  className="btn-cancel"
+                  onClick={this.handleClose}
+                  disabled={updating}
+                >
                   Cancel
                 </button>
               </div>
