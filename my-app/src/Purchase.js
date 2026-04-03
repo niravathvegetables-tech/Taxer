@@ -256,6 +256,7 @@ class Purchase extends React.Component {
       if (data.success) {
         alert(`Purchase saved! ${data.inserted} item(s) recorded.`);
         this.handleClose();
+         this.setState({ updating: false });
       } else {
         alert('Something went wrong: ' + (data.message || 'Unknown error'));
         this.setState({ updating: false });

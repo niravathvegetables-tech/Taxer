@@ -29,6 +29,7 @@ function App() {
   const [editCompany, setEditCompany] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
+  const [showIntro, setShowIntro] = useState(true);
 
   // Step 1: Fetch company first
   useEffect(() => {
@@ -146,8 +147,45 @@ function App() {
 
   const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax"];
 
+  if (showIntro) {
   return (
+    <div className='modervideo'>
+      <div className='modersub'>
+        {/* Optional skip button */}
+        <button
+          onClick={() => setShowIntro(false)}
+           className='modersubbtn'
+        >
+          Skip
+        </button>
+
+        <video
+          src="/taxer.mp4"
+          autoPlay
+          muted
+          playsInline
+          onEnded={() => setShowIntro(false)}
+          style={{ 
+            width: '100%',
+            height: '100%',
+            borderRadius: '8px',
+            objectFit: 'cover'
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+  return (
+
+
+
+      
+    
     <div style={{ padding: '20px' }}>
+
+     
 
       <div className='header'>
         <div className='tabs'>
@@ -171,7 +209,7 @@ function App() {
         <Stock stock={stock} handleEdit={handleEdit} company={company}      reportStock={handleChangeinCompany} />
       )}
       {activeTab === "Receipt" && (
-        <Receipt receipt={receipt} handleEdit={handleEdit} />
+        <Receipt receipt={receipt} handleEdit={handleEdit} company={company} reportReceipt={handleChangeinCompany} />
       )}
       {activeTab === "Payment" && (
         <Payment payment={payment} handleEdit={handleEdit} />
@@ -192,7 +230,7 @@ function App() {
       {/* ── Edit Company Modal ── */}
       {editCompany && (
         <div className="modal-overlay">
-          <div className="modal-box">
+          <div className="modal-box modalpos" >
             <h2>Edit Company</h2>
 
             <label>Sl No</label>

@@ -61,6 +61,8 @@ class Stock extends React.Component {
 handleDelete = async (stocks_id) => {
   if (!window.confirm("Are you sure you want to delete this stock?")) return;
 
+
+
   try {
     const res = await fetch(url + "/wp-json/taxer/v1/deletestock", {
       method: "POST",
@@ -253,7 +255,7 @@ if (formData.stocks_id) {
 
         {editstoker && (
           <div className="modal-overlay">
-            <div className="modal-box">
+            <div className="modal-box modalpos">
               <h2>Add Stock</h2> {/* Fixed title */}
 
               <label>Company ID</label>

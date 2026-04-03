@@ -141,7 +141,7 @@ console.log('Fetched tax data:', data.tax);
     return (
       <div className="tax">
         <h2>Welcome to Tax</h2>
-        <button onClick={() => this.setState({ editTax: true })}>Add Tax</button>
+        <button className="btn-update" onClick={() => this.setState({ editTax: true })}>Add Tax</button>
 
         <table>
           <thead>
@@ -161,10 +161,10 @@ console.log('Fetched tax data:', data.tax);
                   <td>{t.tax_name}</td>
                   <td>{t.tax_percent}%</td>  {/* ✅ fixed field name */}
                   <td>
-                    <button onClick={() => this.handleEdit(t)}>Edit</button>
+                    <button className="btn-update" onClick={() => this.handleEdit(t)}>Edit</button>
                   </td>
                   <td>
-                    <button onClick={() => this.handleDelete(t.tax_id)}>Delete</button>
+                    <button className="btn-delete" onClick={() => this.handleDelete(t.tax_id)}>Delete</button>
                   </td>
                 </tr>
               ))
@@ -174,7 +174,7 @@ console.log('Fetched tax data:', data.tax);
 
         {editTax && (
           <div className="modal-overlay">
-            <div className="modal-box">
+            <div className="modal-box modalpos">
               <h2>{formData.tax_id ? "Edit Tax" : "Add Tax"}</h2>
 
               <label>Tax Name</label>
