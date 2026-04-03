@@ -8,6 +8,7 @@ class Purchase extends React.Component {
       activeTab: "Purchase",
       updating: false,
       stocks: [],
+      date: new Date().toISOString().split("T")[0], // default to today's date
       editpurchase: false,
       rowErrors: {}, // ← track per-row stock errors
       formData: {
@@ -81,8 +82,36 @@ class Purchase extends React.Component {
 
       // Auto-calculate row total
       if (name === 'purchase_amount' || name === 'purchase_count') {
+
+        
         const amount = parseFloat(name === 'purchase_amount' ? value : updatedRows[index].purchase_amount) || 0;
         const count  = parseFloat(name === 'purchase_count'  ? value : updatedRows[index].purchase_count)  || 0;
+
+        /***
+         * 
+         * this is equivalent to: if else statements for amount and count, but more concise. 
+         * It checks which field was changed and uses the new value for that field while keeping the
+         *  existing value for the other field.
+         * let amount, count;
+
+// if (name === 'purchase_amount') {
+//   amount = parseFloat(value) || 0;
+// } else {
+//   amount = parseFloat(updatedRows[index].purchase_amount) || 0;
+// }
+
+// if (name === 'purchase_count') {
+//   count = parseFloat(value) || 0;
+// } else {
+//   count = parseFloat(updatedRows[index].purchase_count) || 0;
+// }
+         * ** */
+
+
+
+
+
+
         updatedRows[index].purchase_total = (amount * count).toFixed(2);
       }
 
@@ -120,7 +149,9 @@ class Purchase extends React.Component {
       return { purchaseRows: updatedRows, rowErrors: updatedErrors };
     });
   };
-
+//here adding a new row to the purchase table with default empty values. 
+// The new row is appended to the existing purchaseRows array in the state.
+//  This allows users to add multiple items to their purchase before submitting.
   addRow = () => {
     this.setState((prevState) => ({
       purchaseRows: [
@@ -129,11 +160,15 @@ class Purchase extends React.Component {
       ]
     }));
   };
-
+// The removeRow function removes a specific row from the purchaseRows array based on the provided index. 
+// It also updates the rowErrors state to ensure that any errors associated with the removed row are cleared. 
+// If all rows are removed, it resets to a single empty row to maintain the structure of the purchase form. 
   removeRow = (index) => {
     this.setState((prevState) => {
       const updatedRows   = prevState.purchaseRows.filter((_, i) => i !== index);
-      const updatedErrors = { ...prevState.rowErrors };
+      // Create a new array excluding 
+      // the row at the specified index
+      const updatedErrors = { ...prevState.rowErrors };// Create a copy of the current rowErrors
       delete updatedErrors[index];
 
       return {
@@ -200,7 +235,8 @@ class Purchase extends React.Component {
       sub_total:      subTotal.toFixed(2),
       tax_amount:     taxAmount.toFixed(2),
       grand_total:    grandTotal.toFixed(2),
-      purchases:      JSON.stringify(purchaseRows)
+      purchases:      JSON.stringify(purchaseRows),
+      date:           this.state.date
     };
 
     console.log('Submitting payload:', payload);
@@ -276,6 +312,15 @@ class Purchase extends React.Component {
                 name="tax_name"
                 value={taxName ? `${taxName} (${taxPercentage}%)` : 'No tax found'}
                 readOnly
+              />
+
+               <label>Date</label>
+              <input
+                name="date"
+                type="date"
+                className="table-input"
+                value={this.state.date}
+                onChange={(e) => this.setState({ date: e.target.value })}
               />
 
               <div className="purchase-table-wrapper">

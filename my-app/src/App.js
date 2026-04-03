@@ -43,6 +43,17 @@ function App() {
   }, [company]);
 
 
+  function handleAddTaxItem(newItem) {
+    console.log('Adding new tax item:', newItem);
+    setTax(newItem);
+  }
+
+
+  function handleChangeinCompany(newItem) {
+     fetchCompany();
+  }
+
+
   function fetchCompany() {
     fetch(url + `/wp-json/taxer/v1/data`)
       .then((res) => res.json())
@@ -93,6 +104,7 @@ function App() {
       id:      com.company_id,
       name:    com.company_name,
       trn:     com.company_trn,
+      amount:  com.company_amount,
       address: com.company_address,
       tax_id:  com.tax_id
     });
@@ -111,6 +123,7 @@ function App() {
     data.append('name',    formData.name);
     data.append('trn',     formData.trn);
     data.append('address', formData.address);
+    data.append('amount',  formData.amount);
     data.append('tax_id',  formData.tax_id);
 
     try {
@@ -155,7 +168,7 @@ function App() {
         <Home company={company} selectedtax={selectedtax} handleEdit={handleEdit} />
       )}
       {activeTab === "Stock" && (
-        <Stock stock={stock} handleEdit={handleEdit} company={company} />
+        <Stock stock={stock} handleEdit={handleEdit} company={company}      reportStock={handleChangeinCompany} />
       )}
       {activeTab === "Receipt" && (
         <Receipt receipt={receipt} handleEdit={handleEdit} />
@@ -173,7 +186,7 @@ function App() {
         <Sales sales={sales} handleEdit={handleEdit} selectedtax={selectedtax} />
       )}
       {activeTab === "Tax" && (
-        <Tax tax={tax} handleEdit={handleEdit} />
+        <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />
       )}
 
       {/* ── Edit Company Modal ── */}
@@ -190,6 +203,9 @@ function App() {
 
             <label>TRN</label>
             <input name="trn" value={formData.trn} onChange={handleChange} />
+
+              <label>Amount</label>
+            <input name="amount" value={formData.amount} onChange={handleChange} />
 
             <label>Address</label>
             <input name="address" value={formData.address} onChange={handleChange} />

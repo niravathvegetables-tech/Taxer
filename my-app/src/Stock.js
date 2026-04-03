@@ -9,6 +9,7 @@ class Stock extends React.Component {
         stocks: [],
       updating: false,
       editstoker: false,
+        hoverdeltetext: false,
       imagePreview: null,
       formData: {
         company_id: props.company && props.company.length > 0 ? props.company[0].company_id : "" // Pre-fill with first company ID
@@ -20,6 +21,9 @@ class Stock extends React.Component {
     this.fetchStocks(); // called once when component mounts
   }
 
+   
+
+   
   setonstoker = (s) => {
     this.setState({ editstoker: s });
   };
@@ -86,6 +90,9 @@ handleDelete = async (stocks_id) => {
       } else {
         this.setState({ stocks: [] });
       }
+
+       this.props.reportStock();
+
     })
     .catch(() => {
       this.setState({ error: 'Failed to connect to WordPress' });
@@ -151,6 +158,20 @@ if (formData.stocks_id) {
   this.setState({ updating: false });
 }
 
+
+ handleMouseEnter = () => {
+    // start a timeout when mouse enters
+
+    this.setState({ hoverdeltetext: true });
+
+    this.hoverTimeout = setTimeout(() => {
+      this.setState({ hoverdeltetext: false });
+    }, 5000); // 1 second delay
+  };
+
+ 
+
+
   render() {
     
     const { editstoker, updating ,stocks  } = this.state;
@@ -164,7 +185,12 @@ if (formData.stocks_id) {
       <div className="stock">
         <h2>Welcome to Stock</h2>
         <a onClick={() => this.setonstoker(true)}>Add Stock</a>
+       <div className="teller">
+        
+        { this.state.hoverdeltetext && <span className="delete-hover-text">When deleted this item an amount will add added to company's account</span> } 
 
+      </div> 
+       
         {/* Stock list table */}
       <table>
         <thead>
@@ -179,6 +205,10 @@ if (formData.stocks_id) {
           </tr>
         </thead>
         <tbody>
+
+           
+
+
           {stocks.length === 0 ? (
             <tr><td colSpan="4">No stocks found</td></tr>
           ) : (
@@ -199,13 +229,25 @@ if (formData.stocks_id) {
           <button className="btn-edit" onClick={() => this.handleEdit(s)}>Edit</button>
         </td>
         <td>
-          <button className="btn-edit" onClick={() => this.handleDelete(s.stocks_id)}>Delete</button>
-        </td>
+          <button className="btn-edit"     
+ 
+          
+         onMouseEnter={this.handleMouseEnter}
+     
 
+
+   onClick={() => this.handleDelete(s.stocks_id)}>Delete</button>
+
+   
+
+        </td>
+                 
 
               </tr>
             ))
           )}
+
+          
         </tbody>
       </table>
 

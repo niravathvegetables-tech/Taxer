@@ -23,6 +23,24 @@ class Tax extends React.Component {
       const data = await res.json();
       if (data.tax && Array.isArray(data.tax)) {
         this.setState({ tax: data.tax });
+
+         
+
+      }
+    } catch (err) {
+      console.error("Failed to fetch tax", err);
+    }
+  }
+
+  async fetchTax2() {
+    try {
+      const res = await fetch(url + "/wp-json/taxer/v1/gettax");
+      const data = await res.json();
+      if (data.tax && Array.isArray(data.tax)) {
+        this.setState({ tax: data.tax });
+console.log('Fetched tax data:', data.tax);
+         this.props.onAddTaxItem(data.tax);
+
       }
     } catch (err) {
       console.error("Failed to fetch tax", err);
@@ -83,7 +101,8 @@ class Tax extends React.Component {
     });
 
 
-        this.fetchTax();
+        this.fetchTax2();
+
       } else {
         alert("Operation failed: " + result.message);
       }
@@ -107,6 +126,7 @@ class Tax extends React.Component {
       if (result.success) {
        // alert("Deleted successfully!");
         this.fetchTax();
+          this.fetchTax2();
       } else {
         alert("Delete failed: " + result.message);
       }
