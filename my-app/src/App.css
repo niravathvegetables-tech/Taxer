@@ -555,3 +555,57 @@
   cursor: pointer;
   z-index: 1;
 }
+
+.home-color ul {
+
+    background-color: #61dafb;
+
+}
+
+
+.stock-color ul {
+
+    background-color: #b1d2ef;
+
+}
+
+
+.purchase-color  ul {
+
+    background-color: #b4d4f1;
+
+}
+
+
+
+.sales-color ul {
+
+    background-color: #abd5d6;
+
+}
+
+.receipt-color ul {
+
+    background-color: #6eec60;
+
+}
+
+
+.payment-color ul {
+
+    background-color: #f1f42f;
+
+}
+
+
+.contra-color ul {
+
+    background-color: #df72b691;
+
+}
+
+.tax-color ul {
+
+    background-color: #dcdf0c;
+
+}

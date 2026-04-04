@@ -8,6 +8,7 @@
       activeTab: "Home"
     };
   }
+  
 
   render() {
     const { selectedtax,company, handleEdit } = this.props;

@@ -50,7 +50,7 @@ function App() {
   }
 
 
-  function handleChangeinCompany(newItem) {
+  function handleChangeinCompany() {
      fetchCompany();
   }
 
@@ -177,6 +177,17 @@ function App() {
   );
 }
 
+const tabColors = {
+  Home: "home-color",
+  Stock: "stock-color",
+  Purchase: "purchase-color",
+  Sales: "sales-color",
+  Receipt: "receipt-color",
+  Payment: "payment-color",
+  Contra: "contra-color",
+  Tax: "tax-color"
+};
+
   return (
 
 
@@ -188,7 +199,7 @@ function App() {
      
 
       <div className='header'>
-        <div className='tabs'>
+        <div className={`tabs ${tabColors[activeTab] || ""}`}>
           <ul>
             {navItems.map((item) => (
               <li
