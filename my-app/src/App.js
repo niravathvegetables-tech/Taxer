@@ -147,10 +147,10 @@ function App() {
 
   const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax"];
 
-  if (showIntro) {
+  if (showIntro==true) {
   return (
-    <div className='modervideo'>
-      <div className='modersub'>
+    <div className='modervideoe'>
+      <div className='modersube'>
         {/* Optional skip button */}
         <button
           onClick={() => setShowIntro(false)}
@@ -223,7 +223,7 @@ const tabColors = {
         <Receipt receipt={receipt} handleEdit={handleEdit} company={company} reportReceipt={handleChangeinCompany} />
       )}
       {activeTab === "Payment" && (
-        <Payment payment={payment} handleEdit={handleEdit} />
+        <Payment payment={payment} handleEdit={handleEdit} company={company} reportPayment={handleChangeinCompany} />
       )}
       {activeTab === "Contra" && (
         <Contra contra={contra} handleEdit={handleEdit} />

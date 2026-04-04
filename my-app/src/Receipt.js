@@ -4,6 +4,7 @@ import url from './Config';
 class Receipt extends React.Component {
   constructor(props) {
     super(props);
+       
     this.state = {
       activeTab: "Receipt",
       editReceipt: false,
@@ -127,7 +128,9 @@ class Receipt extends React.Component {
           alert("Operation failed: " + result.message);
         }
       } catch (err) {
-        alert("Error connecting to WordPress");
+        //alert("Error connecting to WordPress");
+
+        
       }
     }
 

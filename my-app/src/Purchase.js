@@ -8,9 +8,9 @@ class Purchase extends React.Component {
       activeTab: "Purchase",
       updating: false,
       stocks: [],
-      date: new Date().toISOString().split("T")[0], // default to today's date
+      date: new Date().toISOString().split("T")[0],
       editpurchase: false,
-      rowErrors: {}, // ← track per-row stock errors
+      rowErrors: {},
       formData: {
         company_id: ''
       },
@@ -73,6 +73,10 @@ class Purchase extends React.Component {
   handleRowChange = (index, e) => {
     const { name, value } = e.target;
 
+    // Capture stocks from this.state BEFORE entering setState
+    // because prevState.stocks can lag behind the already-loaded list
+    const currentStocks = this.state.stocks;
+
     this.setState((prevState) => {
       const updatedRows = [...prevState.purchaseRows];
       updatedRows[index] = {
@@ -80,38 +84,28 @@ class Purchase extends React.Component {
         [name]: value
       };
 
-      // Auto-calculate row total
-      if (name === 'purchase_amount' || name === 'purchase_count') {
+      // ── Auto-fill purchase_amount from selected stock price ──
+      if (name === 'stocks_id') {
+        const selectedStock = currentStocks.find(
+          (stock) => String(stock.stocks_id) === String(value)
+        );
+        if (selectedStock) {
+          updatedRows[index].purchase_amount = selectedStock.stocks_price;
+          // Recalculate total if count already exists
+          const count = parseFloat(updatedRows[index].purchase_count) || 0;
+          const price = parseFloat(selectedStock.stocks_price) || 0;
+          updatedRows[index].purchase_total = (price * count).toFixed(2);
+        } else {
+          // Stock deselected — clear price and total
+          updatedRows[index].purchase_amount = '';
+          updatedRows[index].purchase_total  = '';
+        }
+      }
 
-        
+      // ── Auto-calculate row total ──
+      if (name === 'purchase_amount' || name === 'purchase_count') {
         const amount = parseFloat(name === 'purchase_amount' ? value : updatedRows[index].purchase_amount) || 0;
         const count  = parseFloat(name === 'purchase_count'  ? value : updatedRows[index].purchase_count)  || 0;
-
-        /***
-         * 
-         * this is equivalent to: if else statements for amount and count, but more concise. 
-         * It checks which field was changed and uses the new value for that field while keeping the
-         *  existing value for the other field.
-         * let amount, count;
-
-// if (name === 'purchase_amount') {
-//   amount = parseFloat(value) || 0;
-// } else {
-//   amount = parseFloat(updatedRows[index].purchase_amount) || 0;
-// }
-
-// if (name === 'purchase_count') {
-//   count = parseFloat(value) || 0;
-// } else {
-//   count = parseFloat(updatedRows[index].purchase_count) || 0;
-// }
-         * ** */
-
-
-
-
-
-
         updatedRows[index].purchase_total = (amount * count).toFixed(2);
       }
 
@@ -123,17 +117,15 @@ class Purchase extends React.Component {
         const enteredCount = parseFloat(value) || 0;
 
         if (stocksId && enteredCount > 0) {
-          // Use already-fetched stocks — no extra API call needed
-          const stockItem = prevState.stocks.find(
+          const stockItem = currentStocks.find(
             (s) => parseInt(s.stocks_id) === parseInt(stocksId)
           );
-
           if (stockItem) {
             const available = parseFloat(stockItem.stocks_total) || 0;
             if (enteredCount > available) {
-            //  updatedErrors[index] = `Only ${available} ${stockItem.stocks_unit || 'units'} available for "${stockItem.stocks_name}"`;
+              updatedErrors[index] = `Only ${available} ${stockItem.stocks_unit || 'units'} available for "${stockItem.stocks_name}"`;
             } else {
-              delete updatedErrors[index]; // clear error if count is valid
+              delete updatedErrors[index];
             }
           }
         } else {
@@ -141,7 +133,7 @@ class Purchase extends React.Component {
         }
       }
 
-      // Reset error when stock item selection changes
+      // ── Reset error when stock item selection changes ──
       if (name === 'stocks_id') {
         delete updatedErrors[index];
       }
@@ -149,9 +141,7 @@ class Purchase extends React.Component {
       return { purchaseRows: updatedRows, rowErrors: updatedErrors };
     });
   };
-//here adding a new row to the purchase table with default empty values. 
-// The new row is appended to the existing purchaseRows array in the state.
-//  This allows users to add multiple items to their purchase before submitting.
+
   addRow = () => {
     this.setState((prevState) => ({
       purchaseRows: [
@@ -160,15 +150,11 @@ class Purchase extends React.Component {
       ]
     }));
   };
-// The removeRow function removes a specific row from the purchaseRows array based on the provided index. 
-// It also updates the rowErrors state to ensure that any errors associated with the removed row are cleared. 
-// If all rows are removed, it resets to a single empty row to maintain the structure of the purchase form. 
+
   removeRow = (index) => {
     this.setState((prevState) => {
       const updatedRows   = prevState.purchaseRows.filter((_, i) => i !== index);
-      // Create a new array excluding 
-      // the row at the specified index
-      const updatedErrors = { ...prevState.rowErrors };// Create a copy of the current rowErrors
+      const updatedErrors = { ...prevState.rowErrors };
       delete updatedErrors[index];
 
       return {
@@ -199,13 +185,11 @@ class Purchase extends React.Component {
 
     const { purchaseRows, rowErrors } = this.state;
 
-    // Block submit if any stock errors exist
     if (Object.keys(rowErrors).length > 0) {
       alert('Please fix stock availability errors before submitting.');
       return;
     }
 
-    // Validate all rows are filled
     const hasEmptyRow = purchaseRows.some(row =>
       !row.stocks_id || !row.purchase_amount || !row.purchase_count || !row.purchase_item_type
     );
@@ -256,7 +240,7 @@ class Purchase extends React.Component {
       if (data.success) {
         alert(`Purchase saved! ${data.inserted} item(s) recorded.`);
         this.handleClose();
-         this.setState({ updating: false });
+        this.setState({ updating: false });
       } else {
         alert('Something went wrong: ' + (data.message || 'Unknown error'));
         this.setState({ updating: false });
@@ -315,7 +299,7 @@ class Purchase extends React.Component {
                 readOnly
               />
 
-               <label>Date</label>
+              <label>Date</label>
               <input
                 name="date"
                 type="date"
@@ -363,7 +347,7 @@ class Purchase extends React.Component {
                             </option>
                             {stocks.map((stock) => (
                               <option key={stock.stocks_id} value={stock.stocks_id}>
-                                {stock.stocks_name} (Avail: {stock.stocks_total} {stock.stocks_unit})
+                                {stock.stocks_name} (Avail: {stock.stocks_total} {stock.stocks_unit} / Price: {stock.stocks_price})
                               </option>
                             ))}
                           </select>
@@ -381,12 +365,11 @@ class Purchase extends React.Component {
                         </td>
 
                         <td>
-                          {/* Purchase Count with inline stock error */}
                           <input
                             type="number"
                             name="purchase_count"
                             className={`table-input ${rowErrors[index] ? 'input-error' : ''}`}
-                            style={ rowErrors[index] ? { borderColor: 'red' } : {} }
+                            style={rowErrors[index] ? { borderColor: 'red' } : {}}
                             value={row.purchase_count}
                             onChange={(e) => this.handleRowChange(index, e)}
                             placeholder="0"

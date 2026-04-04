@@ -1,51 +1,95 @@
- import { useState } from "react";
- import React from 'react';
+import React from 'react';
 
- class Home extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: "Home"
+      activeTab: "Home",
+      showIntro: false
     };
   }
-  
+
+  setShowIntro = (value) => {
+    this.setState({ showIntro: value });
+  }
 
   render() {
-    const { selectedtax,company, handleEdit } = this.props;
+    const { selectedtax, company, handleEdit } = this.props;
+    const { showIntro } = this.state;
 
     if (!company || !Array.isArray(company)) {
       return <p>Loading...</p>;
     }
 
-  
-
     return (
       <div className='company'>
-       
+        
+        <video
+                  src="/taxer.mp4"
+                  autoPlay
+                  muted
+                  playsInline
+                  onEnded={() => this.setShowIntro(false)}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '8px',
+                    objectFit: 'cover'
+                  }}
+                />
 
-        {company.map((com) => (
-          <div className='tab-home' key={com.company_name}>
-            <h2>{com.company_name}</h2>
-            <p>Address: {com.company_address}</p>
-            <p>TRN: {com.company_trn}</p>
-             <p>Amount: {com.company_amount}</p>
-            <p>Tax ID: {selectedtax.tax_name}- {selectedtax.tax_percent}%</p>
+        {company.length > 0 ? (
+          company.map((com) => (
+            <div className='tab-home' key={com.company_name}>
+              <h2>{com.company_name}</h2>
+              <p>Address: {com.company_address}</p>
+              <p>TRN: {com.company_trn}</p>
+              <p>Amount: {com.company_amount}</p>
+              <p>Tax ID: {selectedtax.tax_name} - {selectedtax.tax_percent}%</p>
 
-            <button className="btn-edit" onClick={() => handleEdit(com)}>
-              Edit
-            </button>
+              <button className="btn-edit" onClick={() => handleEdit(com)}>
+                Edit
+              </button>
 
-            <button className="btn-edit" onClick={() => handleEdit(com)}>
-             Create Report
-            </button>
+              <button className="btn-edit" onClick={() => handleEdit(com)}>
+                Create Report
+              </button>
+            </div>
+          ))
+        ) : (
 
+          
+          showIntro && (
+            <div className='modervideo'>
+              <div className='modersub'>
+                {/* Optional skip button */}
+                <button
+                  onClick={() => this.setShowIntro(false)}
+                  className='modersubbtn'
+                >
+                  Skip
+                </button>
 
-          </div>
-        ))}
+                <video
+                  src="/taxer.mp4"
+                  autoPlay
+                  muted
+                  playsInline
+                  onEnded={() => this.setShowIntro(false)}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '8px',
+                    objectFit: 'cover'
+                  }}
+                />
+              </div>
+            </div>
+          )
+        )}
       </div>
     );
   }
 }
 
 export default Home;
-        
