@@ -139,7 +139,7 @@ console.log('Fetched tax data:', data.tax);
     const { tax, editTax, updating, formData } = this.state;
 
     return (
-      <div className="tax">
+      <div className="tax mobwidth">
         <h2>Welcome to Tax</h2>
         <button className="btn-update" onClick={() => this.setState({ editTax: true })}>Add Tax</button>
 

@@ -20,6 +20,71 @@
     };
   }
 
+
+  componentDidMount() {
+      this.fetchPayments();
+    }
+
+    handleEdit = (payment) => {
+    this.setState({
+      editPayment: true,
+      formData: {
+        payment_id: payment.payment_id,
+        payment_name: payment.payment_name,
+        payment_amount: payment.payment_amount
+      },
+      date: payment.payment_date
+    });
+  };
+
+
+
+   handleDelete = async (payment_id, company_id) => {
+    if (!window.confirm("Are you sure you want to delete this payment?")) return;
+
+    this.setState({ deletestart: true });
+
+    try {
+      const res = await fetch(url + "/wp-json/taxer/v1/deletepayment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ payment_id: payment_id, company_id: company_id })
+      });
+      const result = await res.json();
+      if (result.success) {
+        this.fetchPayments();
+        this.props.reportpayments();
+      } else {
+        alert("Failed to delete payment: " + result.message);
+      }
+    } catch (err) {
+      //alert("Error connecting to WordPress");
+    }
+
+    this.setState({ deletestart: false });
+  };
+  
+    async fetchPayments() {
+      try {
+        const res = await fetch(url + `/wp-json/taxer/v1/getpayment`);
+        const data = await res.json();
+        console.log(data);
+  
+        let payment = [];
+        if (data.payment) {
+          payment = Array.isArray(data.payment) ? data.payment : [data.payment];
+        }
+  
+        this.setState({ payment: payment });
+           this.props.reportPayment();
+
+      } catch (err) {
+        this.setState({ error: 'Failed to connect to WordPress' });
+      }
+    }
+
   
   handleClose = () => {
     this.setState({
@@ -73,6 +138,7 @@
             
           });
           this.props.reportPayment();
+           this.fetchPayments();
           this.setState({ updating: false });
         } else {
           alert("Operation failed: " + result.message);
@@ -102,7 +168,7 @@
     
 
     return (
-      <div className='payment'>
+      <div className='payment mobwidth'>
         
 
          <h2>Welcome to Payment</h2>

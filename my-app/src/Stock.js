@@ -184,9 +184,9 @@ if (formData.stocks_id) {
     // No need for companyide loop; use formData.company_id
 
     return (
-      <div className="stock">
+      <div className="stock mobwidth">
         <h2>Welcome to Stock</h2>
-        <a onClick={() => this.setonstoker(true)}>Add Stock</a>
+        <a className="btn-update"  onClick={() => this.setonstoker(true)}>Add Stock</a>
        <div className="teller">
         
         { this.state.hoverdeltetext && <span className="delete-hover-text">When deleted this item an amount will add added to company's account</span> } 

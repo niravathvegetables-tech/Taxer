@@ -24,6 +24,18 @@ class Receipt extends React.Component {
     this.fetchReceipts();
   }
 
+  handleEdit = (payment) => {
+    this.setState({
+      editReceipt: true,
+      formData: {
+        receipt_id: payment.receipt_id,
+        receipt_name: payment.receipt_name,
+        receipt_amount: payment.receipt_amount
+      },
+      date: payment.receipt_date
+    });
+  };
+
   async fetchReceipts() {
     try {
       const res = await fetch(url + `/wp-json/taxer/v1/getreceipt`);
@@ -36,6 +48,7 @@ class Receipt extends React.Component {
       }
 
       this.setState({ receipt: receipts });
+      this.props.reportreceipts();
     } catch (err) {
       this.setState({ error: 'Failed to connect to WordPress' });
     }
@@ -146,7 +159,7 @@ class Receipt extends React.Component {
     }
 
     return (
-      <div className='receipt'>
+      <div className='receipt mobwidth'>
         <h2>Welcome to Receipt</h2>
 
         <button className="btn-update" onClick={() => this.setState({ editReceipt: true })}>

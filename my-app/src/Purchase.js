@@ -123,7 +123,8 @@ class Purchase extends React.Component {
           if (stockItem) {
             const available = parseFloat(stockItem.stocks_total) || 0;
             if (enteredCount > available) {
-              updatedErrors[index] = `Only ${available} ${stockItem.stocks_unit || 'units'} available for "${stockItem.stocks_name}"`;
+               delete updatedErrors[index];
+             // updatedErrors[index] = `Only ${available} ${stockItem.stocks_unit || 'units'} available for "${stockItem.stocks_name}"`;
             } else {
               delete updatedErrors[index];
             }
@@ -279,14 +280,14 @@ class Purchase extends React.Component {
     const hasErrors = Object.keys(rowErrors).length > 0;
 
     return (
-      <div className='purchase'>
+      <div className='purchase mobwidth'>
         <h2>Welcome to Purchase of {companyname}</h2>
 
-        <a onClick={() => this.setpurchase(true)}>Add Purchase</a>
+        <a className="btn-update" onClick={() => this.setpurchase(true)}>Add Purchase</a>
 
         {editpurchase && (
           <div className="modal-overlay">
-            <div className="modal-box modal-box--wide">
+            <div className="modal-box modal-box-purchase modalpos  modal-box--wide">
               <h2>Add Purchase of {companyname}</h2>
 
               <label>Company ID</label>

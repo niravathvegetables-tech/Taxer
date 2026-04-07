@@ -147,35 +147,35 @@ function App() {
 
   const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax"];
 
-  if (showIntro==true) {
-  return (
-    <div className='modervideoe'>
-      <div className='modersube'>
-        {/* Optional skip button */}
-        <button
-          onClick={() => setShowIntro(false)}
-           className='modersubbtn'
-        >
-          Skip
-        </button>
+//   if (showIntro==true) {
+//   return (
+//     <div className='modervideoe'>
+//       <div className='modersube'>
+//         {/* Optional skip button */}
+//         <button
+//           onClick={() => setShowIntro(false)}
+//            className='modersubbtn'
+//         >
+//           Skip
+//         </button>
 
-        <video
-          src="/taxer.mp4"
-          autoPlay
-          muted
-          playsInline
-          onEnded={() => setShowIntro(false)}
-          style={{ 
-            width: '100%',
-            height: '100%',
-            borderRadius: '8px',
-            objectFit: 'cover'
-          }}
-        />
-      </div>
-    </div>
-  );
-}
+//         <video
+//           src="/taxer.mp4"
+//           autoPlay
+//           muted
+//           playsInline
+//           onEnded={() => setShowIntro(false)}
+//           style={{ 
+//             width: '100%',
+//             height: '100%',
+//             borderRadius: '8px',
+//             objectFit: 'cover'
+//           }}
+//         />
+//       </div>
+//     </div>
+//   );
+// }
 
 const tabColors = {
   Home: "home-color",
@@ -194,7 +194,7 @@ const tabColors = {
 
       
     
-    <div style={{ padding: '20px' }}>
+    <div className="app">
 
      
 
@@ -226,13 +226,13 @@ const tabColors = {
         <Payment payment={payment} handleEdit={handleEdit} company={company} reportPayment={handleChangeinCompany} />
       )}
       {activeTab === "Contra" && (
-        <Contra contra={contra} handleEdit={handleEdit} />
+        <Contra contra={contra} handleEdit={handleEdit} company={company} reportContra={handleChangeinCompany} />
       )}
       {activeTab === "Purchase" && (
         <Purchase purchase={purchase} selectedtax={selectedtax} company={company} handleEdit={handleEdit} />
       )}
       {activeTab === "Sales" && (
-        <Sales sales={sales} handleEdit={handleEdit} selectedtax={selectedtax} />
+        <Sales sales={sales} handleEdit={handleEdit}  company={company}  selectedtax={selectedtax} />
       )}
       {activeTab === "Tax" && (
         <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />

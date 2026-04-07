@@ -13,6 +13,26 @@
   }
 }
 
+.modal-box {
+    position: fixed;       /* keeps modal in place */
+    top: 0;
+    left: 0;
+    width: 100%;           /* full width */
+    height: 100%;          /* full height */
+    overflow-y: auto;      /* vertical scroll for entire modal */
+    background: #fff;      /* ensure background is visible */
+    z-index: 9999;         /* keep it above other elements */
+}
+
+.tabs{
+  
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;  
+             /* keep spacing inside */
+
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -238,52 +258,116 @@
 
   position: relative;
  
-  background-color: #61dafb;  width: 38%;
+  background-color: #61dafb;  min-width: 49%;
+          height: 297px;
+
+          border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 3px;     
 }
+
+ 
+
 
 .tabs li{
   display: inline;
-  padding: 1%;
+  padding: 16px;
 }
+
+table{
+
+  margin-top: 33px;
+}
+  
+    
 
 
 .tabs ul{
 
   color: #e11c1c;
     background: #ecec8d;
-    width: 35%;
+    
+    border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;     
 }
 
 .stock{
       background: #b1d2ef;
-       width: 38%;
+          min-width: 49%;
+           min-height: 297px;
+
+           
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
 }
 
 .purchase{
   background: #b4d4f1;
-   width: 38%;
+   min-width: 49%;
+          min-height: 297px;
+
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
 
 }
 
 .sales{ 
   
-  background: #abd5d6;  width: 38%;}
+  background: #abd5d6;  min-width: 49%;
+          min-height: 297px;
+        
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
+        
+        }
 
   .receipt{
-        background: #6eec60;  width: 38%;
+        background: #6eec60;  min-width: 49%;
+          min-height: 297px;
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
   }
 
   .payment{
-    background: #f1f42f; width: 38%;
+    background: #f1f42f; min-width: 49%;
+          min-height: 297px;
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
   }
 
   .contra{
-    background: #df72b691; width: 38%;
+    background: #df72b691; min-width: 49%;
+          min-height: 297px;
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
 }
  
 
 .tax{
-  background: #dcdf0c; width: 38%;
+  background: #dcdf0c; min-width: 49%;
+          min-height: 297px;
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
 }
 
 .purchase-inner.purchase-cell {
@@ -410,6 +494,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  height: 25%;
 }
 
 .purchase-table thead tr {
@@ -492,7 +577,7 @@
   width: 280px;
   border: 1px solid #d1d9e0;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .totals-row {
@@ -520,6 +605,11 @@
 
       position: absolute;
     left: 50px;
+    top: 40px;
+
+    border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px; 
 }
 
 .modervideo {
@@ -609,3 +699,198 @@
     background-color: #dcdf0c;
 
 }
+.modal-box {
+    max-height: 400px;   /* set a fixed height */
+    overflow-y: auto;    /* enable vertical scroll if content exceeds height */
+}
+
+.modal-box-purchase {
+    max-height: 553px;
+    overflow-y: auto;
+}
+
+.modal-box-sales {
+    max-height: 553px;
+    overflow-y: auto;
+}
+
+ @media screen and (max-width: 480px) { 
+.tabs ul li { display: block; }
+.mobwidth{
+  width: 100%;
+}
+
+.btn-update{
+
+  margin-left: 28%;
+}
+
+.btn-delete{
+
+  margin-left: 26%;
+}
+
+.modal-box {
+  width: 60%;
+  height: auto;
+
+ }
+
+ table thead {
+    font-size: 13px; /* larger headers */
+}
+
+table tbody {
+    font-size: 9px; /* normal cells */
+}
+.tabs ul   { width: 95%;     padding: 8px; }
+
+ .modalpos {
+   
+    left: 61px;
+        top: 0px;
+}
+
+  .tabs{     min-width: 272px; }
+
+}
+
+  @media screen and (min-width:481px) and (max-width:600px) { 
+
+    .mobwidth{
+  width: 100%;
+
+ }
+
+ .tabs{     min-width: 272px; }
+
+ .modal-box {
+  width: 60%;
+  height: auto;
+
+ }
+
+  .btn-update{
+
+  margin-left: 28%;
+}
+
+.btn-delete{
+
+  margin-left: 26%;
+}
+
+table thead {
+    font-size: 13px; /* larger headers */
+}
+
+table tbody {
+    font-size: 9px; /* normal cells */
+}
+.tabs ul   { width: 95%;   padding: 8px; }
+
+ .modalpos {
+   
+    left: 80px;
+    top: 0px;
+}
+
+
+  }
+
+
+  @media screen and (min-width:601px) and (max-width:767px) { 
+
+    .mobwidth{
+  width: 100%;
+
+ }
+
+ .tabs{     min-width: 272px; }
+
+ .modal-box {
+  width: 60%;
+  height: auto;
+
+ }
+
+ .btn-update{
+
+  margin-left: 28%;
+}
+
+.btn-delete{
+
+  margin-left: 26%;
+}
+
+table thead {
+    font-size: 13px; /* larger headers */
+}
+
+table tbody {
+    font-size: 9px; /* normal cells */
+}
+
+.tabs ul   { width: 95%;     padding: 8px; }
+
+ .modalpos {
+   
+    left: 80px;
+    top: 4px;
+}
+
+
+  }
+
+  @media screen and (min-width:768px) and (max-width:900px) { 
+.mobwidth{
+width: 100%;
+
+}
+
+.tabs{     min-width: 272px; }
+
+.modal-box {
+  width: 60%;
+  height: auto;
+
+ }
+
+.btn-update{
+
+  margin-left: 28%;
+}
+
+
+.btn-delete{
+
+  margin-left: 26%;
+}
+
+table thead {
+    font-size: 13px; /* larger headers */
+}
+
+table tbody {
+    font-size: 9px; /* normal cells */
+}
+
+.tabs ul   { width: 95%;     padding: 8px; }
+ .modalpos {
+   
+    left: 80px;
+    top: 19px;
+}
+
+   }
+
+     @media screen and (min-width:901px) and (max-width:1024px) { 
+
+        .modalpos {
+   
+    left: 80px;
+    top: 64px;
+}
+
+  }

@@ -22,21 +22,9 @@ class Home extends React.Component {
     }
 
     return (
-      <div className='company'>
+      <div className='company mobwidth'>
         
-        <video
-                  src="/taxer.mp4"
-                  autoPlay
-                  muted
-                  playsInline
-                  onEnded={() => this.setShowIntro(false)}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '8px',
-                    objectFit: 'cover'
-                  }}
-                />
+         
 
         {company.length > 0 ? (
           company.map((com) => (
@@ -60,30 +48,8 @@ class Home extends React.Component {
 
           
           showIntro && (
-            <div className='modervideo'>
-              <div className='modersub'>
-                {/* Optional skip button */}
-                <button
-                  onClick={() => this.setShowIntro(false)}
-                  className='modersubbtn'
-                >
-                  Skip
-                </button>
-
-                <video
-                  src="/taxer.mp4"
-                  autoPlay
-                  muted
-                  playsInline
-                  onEnded={() => this.setShowIntro(false)}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '8px',
-                    objectFit: 'cover'
-                  }}
-                />
-              </div>
+            <div className='modervideoss'>
+               
             </div>
           )
         )}
