@@ -20,6 +20,8 @@ class Receipt extends React.Component {
     };
   }
 
+ 
+
   componentDidMount() {
     this.fetchReceipts();
   }
@@ -49,6 +51,7 @@ class Receipt extends React.Component {
 
       this.setState({ receipt: receipts });
       this.props.reportreceipts();
+
     } catch (err) {
       this.setState({ error: 'Failed to connect to WordPress' });
     }
@@ -89,7 +92,7 @@ class Receipt extends React.Component {
       const result = await res.json();
       if (result.success) {
         this.fetchReceipts();
-        this.props.reportreceipts();
+        
       } else {
         alert("Failed to delete receipt: " + result.message);
       }
@@ -105,6 +108,8 @@ class Receipt extends React.Component {
       formData: { ...prevState.formData, [e.target.name]: e.target.value }
     }));
   };
+
+  
 
   handleUpdate = async () => {
     this.setState({ updating: true });
@@ -136,15 +141,20 @@ class Receipt extends React.Component {
             formData: { receipt_name: "", receipt_amount: "" }
           });
           this.fetchReceipts();
-          this.props.reportreceipts();
+          this.props.reportReceipt();
+          
         } else {
+
           alert("Operation failed: " + result.message);
+          
         }
       } catch (err) {
         //alert("Error connecting to WordPress");
 
-        
+          console.error("Failed to save receipt", err);
       }
+
+      
     }
 
     this.setState({ updating: false });

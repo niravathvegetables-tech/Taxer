@@ -245,6 +245,9 @@ handleChange = (e) => {
         alert(`Sales saved! ${data.inserted} item(s) recorded.`);
         this.handleClose();
         this.setState({ updating: false });
+
+         this.props.reportSales();
+         
       } else {
         alert('Something went wrong: ' + (data.message || 'Unknown error'));
         this.setState({ updating: false });

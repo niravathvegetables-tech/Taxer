@@ -151,6 +151,7 @@ if (formData.stocks_id) {
   });
 
       this.fetchStocks();
+      
     } else {
       alert("Operation failed: " + result.message);
     }

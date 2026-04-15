@@ -62,6 +62,7 @@ function App() {
         setCompany(data.company ? [data.company] : []);
         console.log('Company data:', data);
         setLoading(false);
+        
       })
       .catch(() => {
         setError('Failed to connect to WordPress');
@@ -83,6 +84,7 @@ function App() {
         const found = data.tax.find(t => t.tax_id == companytaxid);
         console.log('companytaxid:', companytaxid, 'found tax:', found);
         setselectedtax(found || {});
+         
       }
     } catch (err) {
       console.error("Failed to fetch tax", err);
@@ -210,6 +212,16 @@ const tabColors = {
               </li>
             ))}
           </ul>
+                {company.length > 0 ? (
+          company.map((com) => (
+            <span className="amount" key={com.id}>
+              Current : {com.company_amount}
+            </span>
+          ))
+        ) : (
+          <span className="amount">Current : 0</span>
+        )}
+
         </div>
       </div>
 
@@ -229,10 +241,10 @@ const tabColors = {
         <Contra contra={contra} handleEdit={handleEdit} company={company} reportContra={handleChangeinCompany} />
       )}
       {activeTab === "Purchase" && (
-        <Purchase purchase={purchase} selectedtax={selectedtax} company={company} handleEdit={handleEdit} />
+        <Purchase purchase={purchase} selectedtax={selectedtax} company={company} handleEdit={handleEdit} reportPurchase={handleChangeinCompany} />
       )}
       {activeTab === "Sales" && (
-        <Sales sales={sales} handleEdit={handleEdit}  company={company}  selectedtax={selectedtax} />
+        <Sales sales={sales} handleEdit={handleEdit}  company={company}  selectedtax={selectedtax}  reportSales={handleChangeinCompany}   />
       )}
       {activeTab === "Tax" && (
         <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />

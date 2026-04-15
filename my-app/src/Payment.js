@@ -78,6 +78,7 @@
         }
   
         this.setState({ payment: payment });
+        
            this.props.reportPayment();
 
       } catch (err) {
