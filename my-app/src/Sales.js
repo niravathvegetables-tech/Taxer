@@ -11,6 +11,7 @@ import url from './Config';
       stocks: [],
       date: new Date().toISOString().split("T")[0],
       editsales: false,
+      alert: null,
       rowErrors: {},
       formData: {
         company_id: ''
@@ -49,6 +50,7 @@ setsales = (s) => {
       this.fetchStocks();
     }
     this.setState({ editsales: s });
+    alert = null;
   };
 
    handleClose = () => {
@@ -242,20 +244,20 @@ handleChange = (e) => {
       console.log('Purchase saved:', data);
 
       if (data.success) {
-        alert(`Sales saved! ${data.inserted} item(s) recorded.`);
+        this.setState({ alert: `Sales saved! ${data.inserted} item(s) recorded.` });
         this.handleClose();
         this.setState({ updating: false });
 
          this.props.reportSales();
          
       } else {
-        alert('Something went wrong: ' + (data.message || 'Unknown error'));
+        this.setState({ alert: 'Something went wrong: ' + (data.message || 'Unknown error') });
         this.setState({ updating: false });
       }
 
     } catch (error) {
       console.error('Failed to save sales:', error);
-      alert('Failed to save sales. Please try again.');
+      this.setState({ alert: 'Failed to save sales. Please try again.' });
       this.setState({ updating: false });
     }
   };
@@ -295,6 +297,7 @@ handleChange = (e) => {
     return (
       <div className='sales mobwidth'>
         
+           <div className="alert-box">{alert}</div>
 
          <h2>Welcome to Sales of {companyname} </h2>
 

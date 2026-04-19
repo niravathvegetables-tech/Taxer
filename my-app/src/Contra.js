@@ -142,15 +142,21 @@
             formData: { contra_name: "", contra_amount: "" },
             
           });
+
+           this.fetchContra();
+
+
           this.props.reportPayment();
-              this.fetchContra();
+             
           this.setState({ updating: false });
         } else {
           alert("Operation failed: " + result.message);
         }
       } catch (err) {
          this.setState({ updating: false });
-      }
+
+         console.log(err);
+      }   
 
 
     }else {
@@ -198,9 +204,14 @@
           <tbody>
             {contra.length === 0 ? (
               <tr><td colSpan="5">No banks found</td></tr>
-            ) : (
-              contra.map((c) => (
-                <tr key={c.contra_id}>
+            ) : (    
+
+              
+              contra.map((c,p) => (  
+
+              
+
+                <tr className={`rr ${p+1} ${c.contra_id} `} key={c.contra_id}>
                   <td>{c.contra_name}</td>
                   <td>{c.contra_amount}</td>
                   <td>{c.contra_date}</td>
@@ -216,7 +227,8 @@
                     </button>
                   </td>
                 </tr>
-              ))
+                
+                )   ) 
             )}
           </tbody>
         </table>

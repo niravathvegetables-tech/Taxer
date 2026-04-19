@@ -7,9 +7,12 @@ class Purchase extends React.Component {
     this.state = {
       activeTab: "Purchase",
       updating: false,
+      purchasereportshow: false,
       stocks: [],
       date: new Date().toISOString().split("T")[0],
       editpurchase: false,
+      alert: null,
+      purchasereport: [],
       rowErrors: {},
       formData: {
         company_id: ''
@@ -20,9 +23,31 @@ class Purchase extends React.Component {
     };
   }
 
+   
+
   componentDidMount() {
     this.fetchStocks();
+    this.getfetchPurchaseREPORT();
   }
+
+
+  getfetchPurchaseREPORT = () => {
+
+     fetch(url + `/wp-json/taxer/v1/getreportpurchase`)
+  .then((res) => res.json())
+  .then((data) => {
+    console.log("API Response:", data); // Debug
+    this.setState({
+      purchasereport: Array.isArray(data.getreport) ? data.getreport : [],
+      purchasereportshow: true
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to fetch purchase report:', err);
+  });
+
+
+  };
 
   fetchStocks = () => {
     fetch(url + `/wp-json/taxer/v1/getstock`)
@@ -47,6 +72,8 @@ class Purchase extends React.Component {
       this.fetchStocks();
     }
     this.setState({ editpurchase: p });
+    alert = null;
+    
   };
 
   handleClose = () => {
@@ -239,26 +266,29 @@ class Purchase extends React.Component {
       console.log('Purchase saved:', data);
 
       if (data.success) {
-        alert(`Purchase saved! ${data.inserted} item(s) recorded.`);
+       // alert(`Purchase saved! ${data.inserted} item(s) recorded.`);
+
+        this.setState({ alert: `Purchase saved! ${data.inserted} item(s) recorded.` });
+
         this.handleClose();
         this.setState({ updating: false });
 
          this.props.reportPurchase();
          
       } else {
-        alert('Something went wrong: ' + (data.message || 'Unknown error'));
+        this.setState({ alert: 'Something went wrong: ' + (data.message || 'Unknown error') });
         this.setState({ updating: false });
       }
 
     } catch (error) {
       console.error('Failed to save purchase:', error);
-      alert('Failed to save purchase. Please try again.');
+      this.setState({ alert: 'Failed to save purchase. Please try again.' });
       this.setState({ updating: false });
     }
   };
 
   render() {
-    const { editpurchase, updating, purchaseRows, stocks, rowErrors } = this.state;
+    const { editpurchase, updating, purchaseRows, stocks, rowErrors, purchasereportshow,purchasereport } = this.state;
     const { purchase, company, selectedtax } = this.props;
 
     if (!purchase || !Array.isArray(purchase)) {
@@ -282,17 +312,61 @@ class Purchase extends React.Component {
 
     const hasErrors = Object.keys(rowErrors).length > 0;
 
+    
+
     return (
       <div className='purchase mobwidth'>
+
+        
+       <div className="alert-box">{alert}</div>
+ 
+
         <h2>Welcome to Purchase of {companyname}</h2>
 
         <a className="btn-update" onClick={() => this.setpurchase(true)}>Add Purchase</a>
+
+          {purchasereportshow && (
+            <div className="purchase-report">
+              <h2>Purchase Report</h2>
+              <table className="report-table">
+                <thead>
+                  <tr>
+                    <th>Purchase ID</th>
+                    <th>Item Name</th>
+                    <th>Purchase Amount</th>
+                    <th>Purchase Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {purchasereport.length === 0 ? (
+                    <tr>
+                      <td colSpan={2}>No purchase records found.</td>
+                    </tr>
+                  ) : (
+                    purchasereport.map((report) => (
+                      <tr key={report.purchase_id}>
+                        <td>{report.purchase_id}</td>
+                        <td> 
+
+                      {this.state.stocks.find(stock => stock.stocks_id === report.stocks_id)?.stocks_name || 'Unknown'}
+
+                        </td>
+                        <td>{report.purchase_amount}</td>
+                        <td>{report.date}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
 
         {editpurchase && (
           <div className="modal-overlay">
             <div className="modal-box modal-box-purchase modalpos  modal-box--wide">
               <h2>Add Purchase of {companyname}</h2>
-
+         
               <label>Company ID</label>
               <input name="company_id" value={companyidee} readOnly />
 
@@ -463,6 +537,9 @@ class Purchase extends React.Component {
             </div>
           </div>
         )}
+
+      
+
       </div>
     );
   }
