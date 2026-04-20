@@ -333,6 +333,7 @@ class Purchase extends React.Component {
                   <tr>
                     <th>Purchase ID</th>
                     <th>Item Name</th>
+                    <th>Item Quantity</th>
                     <th>Purchase Amount</th>
                     <th>Purchase Date</th>
                   </tr>
@@ -351,6 +352,7 @@ class Purchase extends React.Component {
                       {this.state.stocks.find(stock => stock.stocks_id === report.stocks_id)?.stocks_name || 'Unknown'}
 
                         </td>
+                        <td>{report.purchase_count}-{report.purchase_item_type}</td>
                         <td>{report.purchase_amount}</td>
                         <td>{report.date}</td>
                       </tr>

@@ -7,6 +7,8 @@ import url from './Config';
     super(props);
     this.state = {
       activeTab: "Sales",
+       salesreportshow: false,
+        salesreport: [],
       updating: false,
       stocks: [],
       date: new Date().toISOString().split("T")[0],
@@ -24,7 +26,44 @@ import url from './Config';
 
    componentDidMount() {
       this.fetchStocks();
+      this.getfetchSalesREPORT();
     }
+
+
+ getfetchSalesREPORT = () => {
+
+
+     fetch(url + `/wp-json/taxer/v1/getreportsales`)
+
+  .then((res) => res.json())
+
+  .then((data) => {
+
+    console.log("API Response:", data); // Debug
+
+    this.setState({
+
+      salesreport: Array.isArray(data.getreport) ? data.getreport : [],
+
+      salesreportshow: true
+
+    });
+
+
+    
+
+  })
+
+  .catch((err) => {
+
+    console.error('Failed to fetch sales report:', err);
+
+  });
+
+
+
+  };
+
   
     fetchStocks = () => {
       fetch(url + `/wp-json/taxer/v1/getstock`)
@@ -265,7 +304,7 @@ handleChange = (e) => {
 
   render() {
 
-    const { editsales, updating, salesRows, stocks, rowErrors } = this.state;
+    const { editsales, updating, salesRows, stocks, rowErrors, salesreportshow, salesreport } = this.state;
     const { sales, company, selectedtax } = this.props;
 
    if (!sales || !Array.isArray(sales)) {
@@ -302,6 +341,46 @@ handleChange = (e) => {
          <h2>Welcome to Sales of {companyname} </h2>
 
           <a className="btn-update" onClick={() => this.setsales(true)}>Add Sales</a>
+        {salesreportshow && (
+            <div className="salesreport">
+          <h2>Sales Report</h2>
+          <div className="report-table-wrapper">
+            <table className="report-table">
+              <thead> 
+
+                 <th>Sales ID</th>
+                    <th>Item Name</th>
+                    <th>Item Quantity</th>
+                    <th>Sales Amount</th>
+                    <th>Sales Date</th>
+
+                </thead>
+              <tbody>
+
+                 {salesreport.length === 0 ? ( 
+
+                  <tr>
+                      <td colSpan={2}>No sales records found.</td>
+                    </tr>
+
+                 ):(
+
+                  salesreport.map((report,key) => (
+
+                    <tr key={report.key}>
+                      <td>{report.sales_id}</td>
+                      <td>{this.state.stocks.find(stock => stock.stocks_id === report.stocks_id)?.stocks_name || 'Unknown'}</td>
+                      <td>{report.sales_count} - {report.sales_item_type}</td>
+                      <td>{report.sales_amount}</td>
+                      <td>{report.date}</td>
+                    </tr>
+                  )) )} 
+                </tbody>
+            </table>
+          </div>  
+
+           </div>
+        )}
 
         {editsales && (
           <div className="modal-overlay">
