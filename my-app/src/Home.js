@@ -14,7 +14,9 @@ class Home extends React.Component {
   }
 
   render() {
-    const { selectedtax, company, handleEdit } = this.props;
+    
+    const { selectedtax, company, handleEdit ,handleEditCredit } = this.props;
+
     const { showIntro } = this.state;
 
     if (!company || !Array.isArray(company)) {
@@ -39,7 +41,7 @@ class Home extends React.Component {
                 Edit
               </button>
 
-              <button className="btn-edit" onClick={() => handleEdit(com)}>
+              <button className="btn-edit" onClick={() => handleEditCredit()}>
                 Create Report
               </button>
             </div>

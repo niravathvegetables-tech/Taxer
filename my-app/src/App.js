@@ -30,6 +30,8 @@ function App() {
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
   const [showIntro, setShowIntro] = useState(true);
+  const [showcredit, setShowCredit] = useState(false);
+  const [fullerreportes, setShowFullerReportes]  = useState([]);
 
   // Step 1: Fetch company first
   useEffect(() => {
@@ -101,6 +103,32 @@ function App() {
     }
   }
 
+    async function handleEditCredit() {
+
+         setShowCredit(true);
+
+      try {
+      const res =  await fetch(url + "/wp-json/taxer/v1/fullreport");
+      const data =  await res.json();
+
+      if (data) {       
+
+          console.log("Full reports data:", data);
+          setShowFullerReportes(data.reports);  
+
+      }else{
+
+        /// alert("Failed to fetch report1");
+      }
+    } catch (err) {
+
+     /// alert("Failed to fetch report");
+      console.error("Failed to fetch report", err);
+    }
+
+
+    }
+
   function handleEdit(com) {
     setEditCompany(com);
     setFormData({
@@ -117,6 +145,8 @@ function App() {
 
   function handleClose() {
     setEditCompany(null);
+
+     setShowCredit(false);
   }
 
   async function handleUpdate() {
@@ -226,7 +256,7 @@ const tabColors = {
       </div>
 
       {activeTab === "Home" && (
-        <Home company={company} selectedtax={selectedtax} handleEdit={handleEdit} />
+        <Home company={company} selectedtax={selectedtax} handleEdit={handleEdit} handleEditCredit={handleEditCredit} />
       )}
       {activeTab === "Stock" && (
         <Stock stock={stock} handleEdit={handleEdit} company={company}      reportStock={handleChangeinCompany} />
@@ -249,6 +279,45 @@ const tabColors = {
       {activeTab === "Tax" && (
         <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />
       )}
+
+       {showcredit && (
+        <div className="modal-overlay">
+          <div className="modal-box modalpos" >
+            <h2>Fuller Reportes</h2>
+
+                {fullerreportes.length > 0 ? (
+                      <table className="report-table">
+                        <thead>
+                          <tr>
+                            <th>Transaction Number</th>
+                            <th>Transaction Type</th>
+                            <th>Amount</th>
+                            <th>Tax</th>
+                             <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fullerreportes.map((report, index) => (
+                            <tr key={index}>
+                              <td>{report.data.transaction_id}</td>
+                              <td>{report.type}</td>
+                               <td>{report.data.transactionamount}</td>
+                              <td>{report.data.tax}</td>
+                              <td>{report.data.Total}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                ) : (
+                  <p>No reports available.</p>
+                )}
+ 
+
+              <button className="btn-cancel" onClick={handleClose}>Cancel</button>
+          </div>
+        </div>
+      )}
+
 
       {/* ── Edit Company Modal ── */}
       {editCompany && (
