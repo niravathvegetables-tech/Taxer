@@ -32,6 +32,10 @@ function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [showcredit, setShowCredit] = useState(false);
   const [fullerreportes, setShowFullerReportes]  = useState([]);
+  const [inputTax, setInputTax] = useState(0);
+  const [outputTax, setOutputTax] = useState(0);
+
+  const [fullresulttax, setFullResultTax] = useState(0);
 
   // Step 1: Fetch company first
   useEffect(() => {
@@ -44,6 +48,16 @@ function App() {
       fetchTax();
     }
   }, [company]);
+
+useEffect(() => {
+     fetchFullerReportes();
+  }, [company]);
+
+  useEffect(() => {
+  setInputTax(totalInputTax);
+  setOutputTax(totalOutputTax);
+ setFullResultTax(parseFloat((totalOutputTax - totalInputTax).toFixed(2)));
+}, [fullerreportes]);
 
 
   function handleAddTaxItem(newItem) {
@@ -107,7 +121,16 @@ function App() {
 
          setShowCredit(true);
 
-      try {
+     
+
+
+    }
+
+
+    async function fetchFullerReportes() {  
+
+
+       try {
       const res =  await fetch(url + "/wp-json/taxer/v1/fullreport");
       const data =  await res.json();
 
@@ -127,7 +150,8 @@ function App() {
     }
 
 
-    }
+
+     }
 
   function handleEdit(com) {
     setEditCompany(com);
@@ -220,6 +244,31 @@ const tabColors = {
   Tax: "tax-color"
 };
 
+
+const totalInputTax = fullerreportes.reduce((acc, report) => {
+  // Ensure tax is a number
+  const taxInputValue = Number(report.data.tax) || 0;
+
+   return report.type === "purchase" ? acc + taxInputValue : acc;
+  
+
+  
+}, 0);
+
+
+const totalOutputTax = fullerreportes.reduce((acc, report) => {
+  // Ensure tax is a number
+  const taxOutputValue = Number(report.data.tax) || 0;
+
+  return report.type === "sales" ? acc + taxOutputValue : acc;
+  
+
+  
+}, 0);
+
+
+
+
   return (
 
 
@@ -284,16 +333,18 @@ const tabColors = {
         <div className="modal-overlay">
           <div className="modal-box modalpos" >
             <h2>Fuller Reportes</h2>
-
+          <p>Note : Transaction(T)
+          </p>
                 {fullerreportes.length > 0 ? (
                       <table className="report-table">
                         <thead>
                           <tr>
-                            <th>Transaction Number</th>
-                            <th>Transaction Type</th>
+                            <th>T-Number</th>
+                            <th>T-Type</th>
                             <th>Amount</th>
                             <th>Tax</th>
                              <th>Total</th>
+                             <th>Date</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -304,8 +355,26 @@ const tabColors = {
                                <td>{report.data.transactionamount}</td>
                               <td>{report.data.tax}</td>
                               <td>{report.data.Total}</td>
+                              <td>{report.data.Date}</td>
                             </tr>
                           ))}
+
+                           <tr>
+            <td colSpan="3"><strong>Total Input Tax</strong></td>
+            <td colSpan="3">{inputTax}</td>
+          </tr>
+
+          <tr>
+            <td colSpan="3"><strong>Total Output Tax</strong></td>
+            <td colSpan="3">{outputTax}</td>
+          </tr>
+
+          <tr>
+            <td colSpan="3"><strong>Net Tax</strong></td>
+            <td colSpan="3">{fullresulttax}</td>
+          </tr>
+
+            
                         </tbody>
                       </table>
                 ) : (

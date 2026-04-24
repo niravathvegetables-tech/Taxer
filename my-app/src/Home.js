@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react';  
+import Typewriter from './component/Typewriter';
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -14,9 +16,7 @@ class Home extends React.Component {
   }
 
   render() {
-    
-    const { selectedtax, company, handleEdit ,handleEditCredit } = this.props;
-
+    const { selectedtax, company, handleEdit, handleEditCredit } = this.props;
     const { showIntro } = this.state;
 
     if (!company || !Array.isArray(company)) {
@@ -25,17 +25,24 @@ class Home extends React.Component {
 
     return (
       <div className='company mobwidth'>
-        
-         
-
         {company.length > 0 ? (
           company.map((com) => (
             <div className='tab-home' key={com.company_name}>
-              <h2>{com.company_name}</h2>
-              <p>Address: {com.company_address}</p>
-              <p>TRN: {com.company_trn}</p>
-              <p>Amount: {com.company_amount}</p>
-              <p>Tax ID: {selectedtax.tax_name} - {selectedtax.tax_percent}%</p>
+              <h2>
+                <Typewriter text={com.company_name || ""} speed={1500 / ((com.company_name?.length || 1))} />
+              </h2>
+              <p>
+                Address: {com.company_address || ""}  
+              </p>
+              <p>
+                TRN:  {String(com.company_trn || "")}
+              </p>
+              <p>
+                Amount:  {String(com.company_amount || "")} 
+              </p>
+              <p>
+                Tax ID:  {`${selectedtax?.tax_name || ""} - ${selectedtax?.tax_percent || ""}%`}  
+              </p>
 
               <button className="btn-edit" onClick={() => handleEdit(com)}>
                 Edit
@@ -47,13 +54,7 @@ class Home extends React.Component {
             </div>
           ))
         ) : (
-
-          
-          showIntro && (
-            <div className='modervideoss'>
-               
-            </div>
-          )
+          showIntro && <div className='modervideoss'></div>
         )}
       </div>
     );
