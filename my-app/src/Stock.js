@@ -73,6 +73,9 @@ handleDelete = async (stocks_id) => {
     if (result.success) {
      // alert("Deleted successfully!");
       this.fetchStocks(); // refresh list
+
+      this.props.reportStock();
+
     } else {
       alert("Delete failed: " + result.message);
     }
@@ -93,7 +96,7 @@ handleDelete = async (stocks_id) => {
         this.setState({ stocks: [] });
       }
 
-       this.props.reportStock();
+       
 
     })
     .catch(() => {
@@ -151,6 +154,8 @@ if (formData.stocks_id) {
   });
 
       this.fetchStocks();
+
+      this.props.reportStock();
       
     } else {
       alert("Operation failed: " + result.message);

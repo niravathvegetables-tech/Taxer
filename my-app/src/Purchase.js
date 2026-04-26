@@ -69,7 +69,7 @@ class Purchase extends React.Component {
 
   setpurchase = (p) => {
     if (p === true) {
-      this.fetchStocks();
+     // this.fetchStocks();
     }
     this.setState({ editpurchase: p });
     alert = null;
@@ -274,6 +274,8 @@ class Purchase extends React.Component {
         this.setState({ updating: false });
 
          this.props.reportPurchase();
+         this.fetchStocks();
+        
          
       } else {
         this.setState({ alert: 'Something went wrong: ' + (data.message || 'Unknown error') });

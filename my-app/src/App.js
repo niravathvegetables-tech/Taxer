@@ -39,19 +39,19 @@ function App() {
 
   // Step 1: Fetch company first
   useEffect(() => {
-    fetchCompany();
+    fetchCompany();console.log("Fetching company data...");
   }, []);
 
   // Step 2: Fetch tax only after company is loaded
   useEffect(() => {
     if (company.length > 0) {
-      fetchTax();
+      fetchTax(); console.log("Fetching tax data...");
     }
   }, [company]);
 
 useEffect(() => {
-     fetchFullerReportes();
-  }, [company]);
+     fetchFullerReportes(); console.log("Fetching fuller reportes...");
+  }, []);
 
   useEffect(() => {
   setInputTax(totalInputTax);

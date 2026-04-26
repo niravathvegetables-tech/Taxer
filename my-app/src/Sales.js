@@ -86,7 +86,7 @@ import url from './Config';
 
 setsales = (s) => {
     if (s === true) {
-      this.fetchStocks();
+     // this.fetchStocks();
     }
     this.setState({ editsales: s });
     alert = null;
@@ -288,6 +288,9 @@ handleChange = (e) => {
         this.setState({ updating: false });
 
          this.props.reportSales();
+
+          this.fetchStocks();
+      this.getfetchSalesREPORT();
          
       } else {
         this.setState({ alert: 'Something went wrong: ' + (data.message || 'Unknown error') });
