@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef, createContext, useContext } from 'react';
 import Home from './Home';
 import Stock from './Stock';
 import Receipt from './Receipt';
@@ -10,9 +10,20 @@ import Purchase from './Purchase';
 import Sales from './Sales';
 import Tax from './Tax';
 import url from './Config';
+import { OnlineContext } from './OnlineContext';
+ 
 
+ 
 
 function App() {
+
+
+   const purchaseRef = useRef(0);
+
+   
+  const [isOnline, setIsOnline] = useState(true);
+
+ 
 
   const [company, setCompany] = useState([]);
   const [stock, setstock] = useState([]);
@@ -36,6 +47,24 @@ function App() {
   const [outputTax, setOutputTax] = useState(0);
 
   const [fullresulttax, setFullResultTax] = useState(0);
+
+
+   useEffect(() => {
+    function handleOnline() {
+      setIsOnline(true);
+    }
+    function handleOffline() {
+      setIsOnline(false);
+    }
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+
 
   // Step 1: Fetch company first
   useEffect(() => {
@@ -137,7 +166,7 @@ useEffect(() => {
       if (data) {       
 
           console.log("Full reports data:", data);
-          setShowFullerReportes(data.reports);  
+          setShowFullerReportes(data.reports || []);   
 
       }else{
 
@@ -277,7 +306,7 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
     
     <div className="app">
 
-     
+     <h1>{isOnline ? '✅ Online' : '❌ Disconnected'}</h1>
 
       <div className='header'>
         <div className={`tabs ${tabColors[activeTab] || ""}`}>
@@ -319,12 +348,15 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
       {activeTab === "Contra" && (
         <Contra contra={contra} handleEdit={handleEdit} company={company} reportContra={handleChangeinCompany} />
       )}
+
+      <OnlineContext.Provider value={isOnline}>
       {activeTab === "Purchase" && (
-        <Purchase purchase={purchase} selectedtax={selectedtax} company={company} handleEdit={handleEdit} reportPurchase={handleChangeinCompany} />
+        <Purchase purchase={purchase} purchaseref={purchaseRef} selectedtax={selectedtax} company={company} handleEdit={handleEdit} reportPurchase={handleChangeinCompany} />
       )}
       {activeTab === "Sales" && (
         <Sales sales={sales} handleEdit={handleEdit}  company={company}  selectedtax={selectedtax}  reportSales={handleChangeinCompany}   />
       )}
+      </OnlineContext.Provider>
       {activeTab === "Tax" && (
         <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />
       )}

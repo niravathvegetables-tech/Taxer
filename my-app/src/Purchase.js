@@ -1,7 +1,12 @@
 import React from 'react';
 import url from './Config';
+import { useRef } from 'react';
+import { OnlineContext } from './OnlineContext';
 
 class Purchase extends React.Component {
+
+  static contextType = OnlineContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -21,13 +26,27 @@ class Purchase extends React.Component {
         { stocks_id: '', purchase_amount: '', purchase_count: '', purchase_item_type: '', purchase_total: '' }
       ]
     };
+
+      
   }
 
-   
-
+    
+    
+      
   componentDidMount() {
+ 
+   
     this.fetchStocks();
     this.getfetchPurchaseREPORT();
+
+
+    if(this.props.purchaseref.current >=1){
+      this.setState({ purchasereportshow: true });
+    }
+    
+    
+     console.log("Component mounted. Count:", this.props.purchaseref.current); // Debug log
+
   }
 
 
@@ -41,11 +60,18 @@ class Purchase extends React.Component {
       purchasereport: Array.isArray(data.getreport) ? data.getreport : [],
       purchasereportshow: true
     });
+    
+    console.log("Purchase report fetched. Count:"+this.props.purchaseref.current); // Debug log
+    
+    this.props.purchaseref.current++; // Update ref with latest report data
+    
+    this.count += 1; // Increment count on successful fetch
   })
   .catch((err) => {
     console.error('Failed to fetch purchase report:', err);
   });
 
+   
 
   };
 
@@ -314,12 +340,16 @@ class Purchase extends React.Component {
 
     const hasErrors = Object.keys(rowErrors).length > 0;
 
-    
+      const isOnline = this.context;
 
     return (
+
+       
+
       <div className='purchase mobwidth'>
 
-        
+         <h1>{isOnline ? '✅ Online' : '❌ Disconnected'}</h1>
+
        <div className="alert-box">{alert}</div>
  
 
@@ -327,7 +357,8 @@ class Purchase extends React.Component {
 
         <a className="btn-update" onClick={() => this.setpurchase(true)}>Add Purchase</a>
 
-          {purchasereportshow && (
+          {purchasereportshow && (  
+             
             <div className="purchase-report">
               <h2>Purchase Report</h2>
               <table className="report-table">
