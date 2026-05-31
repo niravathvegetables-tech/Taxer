@@ -380,16 +380,22 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {fullerreportes.map((report, index) => (
-                            <tr key={index}>
-                              <td>{report.data.transaction_id}</td>
-                              <td>{report.type}</td>
-                               <td>{report.data.transactionamount}</td>
-                              <td>{report.data.tax}</td>
-                              <td>{report.data.Total}</td>
-                              <td>{report.data.Date}</td>
-                            </tr>
-                          ))}
+                          {fullerreportes.map((report, index) => {
+
+
+  return (
+    <tr key={index}>
+      <td>{report.data.transaction_id}</td>
+      <td>{report.type}</td>
+      <td>{report.data.transactionamount}</td>
+      <td>{report.data.tax}</td>
+      <td>{report.data.Total}</td>
+      <td>{report.data.Date}</td>
+    </tr>
+  );
+  
+})}
+
 
                            <tr>
             <td colSpan="3"><strong>Total Input Tax</strong></td>
