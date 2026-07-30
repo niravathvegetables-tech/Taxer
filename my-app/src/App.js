@@ -9,6 +9,7 @@ import Contra from './Contra';
 import Purchase from './Purchase';
 import Sales from './Sales';
 import Tax from './Tax';
+import Order from './Order';
 import url from './Config';
 import { OnlineContext } from './OnlineContext';
  
@@ -230,7 +231,7 @@ useEffect(() => {
     setUpdating(false);
   }
 
-  const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax"];
+  const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax", "Order"];
 
 //   if (showIntro==true) {
 //   return (
@@ -356,6 +357,11 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
       {activeTab === "Sales" && (
         <Sales sales={sales} handleEdit={handleEdit}  company={company}  selectedtax={selectedtax}  reportSales={handleChangeinCompany}   />
       )}
+
+      {activeTab === "Order" && (
+        <Order    />
+      )}
+
       </OnlineContext.Provider>
       {activeTab === "Tax" && (
         <Tax tax={tax} handleEdit={handleEdit}  onAddTaxItem={handleAddTaxItem} />

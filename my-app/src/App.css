@@ -317,6 +317,20 @@ table{
 
 }
 
+
+.order{
+  background: #e4ac81c2;
+   min-width: 49%;
+          min-height: 297px;
+
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
+
+}
+
 .sales{ 
   
   background: #abd5d6;  min-width: 49%;
