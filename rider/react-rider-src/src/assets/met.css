@@ -1,0 +1,356 @@
+/* ============================================================
+   Rider Auth — Metallic / Brushed-Steel theme
+   Covers: .rider-login, .rider-register (login + register forms)
+   ============================================================ */
+
+:root {
+  /* Base metal tones */
+  --gm-900: #14171c;   /* darkest gunmetal, page bg */
+  --gm-800: #1d2129;   /* card bg */
+  --gm-700: #262b34;   /* input bg */
+  --gm-600: #333944;   /* borders / dividers */
+
+  /* Chrome / highlight tones */
+  --chrome-100: #f2f4f6;
+  --chrome-300: #cdd4dc;
+  --chrome-500: #98a2ae;
+  --chrome-700: #5b6472;
+
+  /* Accent — brushed copper (the one bold move) */
+  --copper-300: #e3a968;
+  --copper-500: #c07f3d;
+  --copper-700: #8f5a28;
+
+  /* Status */
+  --danger: #ff8686;
+  --danger-bg: rgba(255, 107, 107, 0.1);
+  --success: #7fe0a0;
+  --success-bg: rgba(111, 214, 143, 0.1);
+
+  --radius: 10px;
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ---------- Shared card shell ---------- */
+.rider-login,
+.rider-register {
+  --card-pad: 40px;
+  max-width: 420px;
+  margin: 48px auto;
+  padding: var(--card-pad);
+  font-family: var(--font-body);
+  color: var(--chrome-100);
+
+  background:
+    linear-gradient(160deg, var(--gm-800) 0%, var(--gm-900) 100%);
+  border: 1px solid var(--gm-600);
+  border-radius: var(--radius);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 20px 40px -20px rgba(0, 0, 0, 0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+/* brushed-metal texture: faint diagonal striping */
+.rider-login::before,
+.rider-register::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.015) 0px,
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+/* thin chrome edge along the top of the card */
+.rider-login::after,
+.rider-register::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--chrome-300) 45%,
+    var(--chrome-100) 50%,
+    var(--chrome-300) 55%,
+    transparent
+  );
+  opacity: 0.6;
+}
+
+.rider-login h2,
+.rider-register h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  margin: 0 0 28px;
+  color: var(--chrome-100);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Form layout ---------- */
+.rider-login form,
+.rider-register form {
+  display: flex;
+  flex-direction: column;
+}
+
+.rider-login label,
+.rider-register label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--chrome-500);
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+.rider-login label:first-of-type,
+.rider-register label:first-of-type {
+  margin-top: 0;
+}
+
+/* ---------- Inputs: "machined" recessed look ---------- */
+.rider-login input,
+.rider-register input {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--chrome-100);
+  background: var(--gm-700);
+  border: 1px solid var(--gm-600);
+  border-radius: 6px;
+  padding: 12px 14px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(0, 0, 0, 0.3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rider-login input::placeholder,
+.rider-register input::placeholder {
+  color: var(--chrome-700);
+}
+
+.rider-login input:hover,
+.rider-register input:hover {
+  border-color: var(--chrome-700);
+}
+
+.rider-login input:focus,
+.rider-register input:focus {
+  outline: none;
+  border-color: var(--copper-500);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.45),
+    0 0 0 3px rgba(192, 127, 61, 0.25);
+}
+
+.rider-login input:focus-visible,
+.rider-register input:focus-visible {
+  outline: 2px solid var(--copper-300);
+  outline-offset: 2px;
+}
+
+.rider-login input:disabled,
+.rider-register input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Primary button: brushed copper with a shine sweep ---------- */
+.rider-login button[type="submit"],
+.rider-register button[type="submit"] {
+  position: relative;
+  margin-top: 26px;
+  padding: 13px 20px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #241505;
+  background: linear-gradient(180deg, var(--copper-300) 0%, var(--copper-500) 55%, var(--copper-700) 100%);
+  border: 1px solid var(--copper-700);
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 6px 14px -6px rgba(192, 127, 61, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.rider-login button[type="submit"]:hover:not(:disabled),
+.rider-register button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 8px 18px -6px rgba(192, 127, 61, 0.75);
+}
+
+.rider-login button[type="submit"]:active:not(:disabled),
+.rider-register button[type="submit"]:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.rider-login button[type="submit"]:focus-visible,
+.rider-register button[type="submit"]:focus-visible {
+  outline: 2px solid var(--chrome-100);
+  outline-offset: 2px;
+}
+
+.rider-login button[type="submit"]:disabled,
+.rider-register button[type="submit"]:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.4) brightness(0.7);
+  box-shadow: none;
+}
+
+/* shine sweep on hover, respects reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .rider-login button[type="submit"]::before,
+  .rider-register button[type="submit"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+  }
+
+  .rider-login button[type="submit"]:hover:not(:disabled)::before,
+  .rider-register button[type="submit"]:hover:not(:disabled)::before {
+    left: 130%;
+  }
+}
+
+/* ---------- Secondary / link buttons ---------- */
+.rider-login .link-btn,
+.rider-register .link-btn {
+  background: none;
+  border: none;
+  color: var(--copper-300);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rider-login .link-btn:hover,
+.rider-register .link-btn:hover {
+  color: var(--copper-500);
+}
+
+.rider-login .link-btn:focus-visible,
+.rider-register .link-btn:focus-visible {
+  outline: 2px solid var(--chrome-100);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.rider-login > p,
+.rider-register > p {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--chrome-500);
+  text-align: center;
+}
+
+/* ---------- Status messages ---------- */
+.rider-login .error,
+.rider-register .error {
+  margin-top: 14px;
+  margin-bottom: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  border-radius: 6px;
+}
+
+.rider-register .success {
+  margin-top: 14px;
+  margin-bottom: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--success);
+  background: var(--success-bg);
+  border: 1px solid rgba(111, 214, 143, 0.35);
+  border-radius: 6px;
+}
+
+/* ============================================================
+   Responsive: tablet & desktop refinements
+   ============================================================ */
+@media (min-width: 768px) {
+  .rider-login,
+  .rider-register {
+    --card-pad: 48px;
+    margin: 72px auto;
+  }
+
+  .rider-login h2,
+  .rider-register h2 {
+    font-size: 27px;
+  }
+}
+
+/* ============================================================
+   Responsive: mobile
+   ============================================================ */
+@media (max-width: 480px) {
+  .rider-login,
+  .rider-register {
+    --card-pad: 24px;
+    max-width: none;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .rider-login h2,
+  .rider-register h2 {
+    font-size: 21px;
+    margin-bottom: 22px;
+  }
+
+  .rider-login input,
+  .rider-register input {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+    padding: 13px 14px;
+  }
+
+  .rider-login button[type="submit"],
+  .rider-register button[type="submit"] {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
