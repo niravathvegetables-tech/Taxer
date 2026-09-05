@@ -33,6 +33,37 @@
 
 }
 
+.order-table {
+  border-collapse: collapse; /* ensures borders don’t double */
+  width: 100%;
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #000; /* solid line around each cell */
+  padding: 8px;
+  text-align: left;
+}
+
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.order-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 600px; /* ensures columns don’t shrink too much */
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -61,6 +92,15 @@
   text-align: center;
 }
 
+.customer{
+background: #f6a2326b;
+    min-width: 49%;
+    min-height: 297px;
+    border: 3px solid #ff007f;
+    border-radius: 6px;
+    padding: 20px;
+
+  }
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -126,6 +166,19 @@
   margin-left: 10px;
 }
 
+
+.show-menu{
+
+  background-color: #0073aa;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+
+}
+
 .btn-delete {
   background-color: #dc3232;
   color: white;
@@ -153,6 +206,16 @@
   cursor: pointer;
 }
 
+.orcomm {
+    display: block;
+    margin-bottom: 23px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    width: 196px;
+}
+
 /* ── Modal Overlay ── */
 .modal-overlay {
   position: fixed;
@@ -160,11 +223,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+ /* ── background-color: rgba(0, 0, 0, 0.5); ── */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.show-menu{
+
+  display: none;
 }
 
 /* ── Modal Box ── */
@@ -319,7 +387,7 @@ table{
 
 
 .order{
-  background: #e4ac81c2;
+  background: #cef5d46b;
    min-width: 49%;
           min-height: 297px;
 
@@ -376,6 +444,18 @@ table{
 
 .tax{
   background: #dcdf0c; min-width: 49%;
+          min-height: 297px;
+          
+  border: 3px solid #ff007f;   /* rose color border */
+  border-radius: 6px;          /* optional: rounded corners */
+  padding: 20px;               /* keep spacing inside */
+
+}
+
+.order{
+  background: #cef5d46b;
+
+   min-width: 49%;
           min-height: 297px;
           
   border: 3px solid #ff007f;   /* rose color border */
@@ -734,9 +814,10 @@ table{
   width: 100%;
 }
 
-.btn-update{
-
-  margin-left: 28%;
+ .orcomm.btn-update {
+  margin-left: 0;
+  width: 67%;          /* let it size to the screen instead of fixed 196px */
+  margin-bottom: 12px; /* consistent spacing regardless of wrapping */
 }
 
 .btn-delete{
@@ -766,6 +847,24 @@ table tbody {
 }
 
   .tabs{     min-width: 272px; }
+
+  .show-menu{
+
+  display: block;
+}
+
+  .header{
+
+  display: none;
+}
+
+.modal-overlay {
+
+
+            top: 219px;
+            left: -20px;
+
+}
 
 }
 
@@ -810,6 +909,19 @@ table tbody {
 }
 
 
+.show-menu{
+
+  display: none;
+}
+
+.modal-overlay {
+
+    top: 161px;
+    left: -21px;
+
+}
+
+
   }
 
 
@@ -827,6 +939,14 @@ table tbody {
   height: auto;
 
  }
+
+ .modal-overlay {
+
+    top: 161px;
+ 
+
+}
+
 
  .btn-update{
 
@@ -854,6 +974,11 @@ table tbody {
     top: 4px;
 }
 
+.show-menu{
+
+  display: none;
+}
+
 
   }
 
@@ -870,6 +995,14 @@ width: 100%;
   height: auto;
 
  }
+
+
+ .modal-overlay {
+
+    top: 161px;
+ 
+
+}
 
 .btn-update{
 
@@ -897,6 +1030,12 @@ table tbody {
     top: 19px;
 }
 
+
+.show-menu{
+
+  display: none;
+}
+
    }
 
      @media screen and (min-width:901px) and (max-width:1024px) { 
@@ -907,4 +1046,137 @@ table tbody {
     top: 64px;
 }
 
+ .modal-overlay {
+
+      top: 3px;
+       left: 304px;
+ 
+
+}
+
+
+.show-menu{
+
+  display: none;
+}
+
   }
+
+
+
+
+
+  @media (max-width: 768px) {
+  .order-table,
+  .order-table thead,
+  .order-table tbody,
+  .order-table th,
+  .order-table td,
+  .order-table tr {
+    display: block;
+  }
+
+  .order-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  .order-table td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .order-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+  }
+}
+
+.tabs li {
+    display: inline;
+    padding: 3px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.order-table {
+  width: 100%;              /* full width */
+  border-collapse: collapse;
+  margin: 0;                /* remove default margins */
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tabs li {
+  background-color: #007bff;   /* button color */
+  color: #fff;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  user-select: none;           /* prevents text selection */
+}
+
+.tabs li:hover {
+  background-color: #0056b3;   /* darker on hover */
+}
+
+
+@media (max-width: 768px) {
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+
+  .table-responsive {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .order-table {
+    width: 100%;
+  }
+}
+
+
+.table-responsive {
+  overflow-x: auto;       /* enable horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+  width: 100%;            /* container spans full width */
+}
+
+.order-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 700px;       /* force table to keep structure */
+}
+
+.order-table th,
+.order-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}

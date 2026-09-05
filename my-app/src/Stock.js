@@ -12,7 +12,8 @@ class Stock extends React.Component {
         hoverdeltetext: false,
       imagePreview: null,
       formData: {
-        company_id: props.company && props.company.length > 0 ? props.company[0].company_id : "" // Pre-fill with first company ID
+        company_id: props.company && props.company.length > 0 ? props.company[0].company_id : "", // Pre-fill with first company ID
+         stocks_type: "kitchen"
       }
     };
   }
@@ -38,6 +39,7 @@ class Stock extends React.Component {
   this.setState({
     editstoker: false,
     formData: { company_id: this.props.company?.[0]?.company_id || "" },
+    stocks_type: "kitchen",
     imagePreview: null
   });
 };
@@ -51,7 +53,8 @@ class Stock extends React.Component {
       stocks_price: stock.stocks_price,
       stocks_total: stock.stocks_total,
       stocks_unit: stock.stocks_unit,
-      stocks_image: stock.stocks_image
+      stocks_image: stock.stocks_image,
+      stocks_type: stock.stocks_type 
     },
     imagePreview: stock.stocks_image || null, // show existing image until new one selected
     editstoker: true
@@ -126,6 +129,7 @@ handleFileChange = (e) => {
   data.append("stocks_price", formData.stocks_price);
   data.append("stocks_total", formData.stocks_total);
   data.append("stocks_unit", formData.stocks_unit);
+  data.append("stocks_type", formData.stocks_type); 
 
   if (formData.stocks_image) {
     data.append("stocks_image", formData.stocks_image);
@@ -207,6 +211,7 @@ if (formData.stocks_id) {
             <th>Price</th>
             <th>Total</th>
             <th>Unit</th>
+            <th>Type</th>
             <th>Image</th>
             <th>Edit</th>
             <th>Delete</th>
@@ -226,6 +231,7 @@ if (formData.stocks_id) {
                 <td>{s.stocks_price}</td>
                 <td>{s.stocks_total}</td>
                 <td>{s.stocks_unit}</td>
+                <td>{s.stocks_type}</td>
                   <td>
                   {s.stocks_image ? (
                   <img src={s.stocks_image} alt={s.stocks_name} width="50" />
@@ -303,6 +309,30 @@ if (formData.stocks_id) {
                 <option value="nos">Number</option>
                 <option value="litre">Litre</option>
               </select>
+
+              <label>Stock Type</label>
+              <div className="radio-group">
+              <label>
+              <input
+              type="radio"
+              name="stocks_type"
+              value="food"
+              checked={this.state.formData.stocks_type === "food"}
+              onChange={this.handleChange}
+              />
+              Food
+              </label>
+              <label>
+              <input
+              type="radio"
+              name="stocks_type"
+              value="kitchen"
+              checked={this.state.formData.stocks_type === "kitchen"}
+              onChange={this.handleChange}
+              />
+              Kitchen
+              </label>
+              </div>
 
               <label>Stock Image</label>
                <div className="image-preview-box">

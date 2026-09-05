@@ -10,8 +10,11 @@ import Purchase from './Purchase';
 import Sales from './Sales';
 import Tax from './Tax';
 import Order from './Order';
+import Customer from './Customer';
+import Riders from './Rider';
 import url from './Config';
 import { OnlineContext } from './OnlineContext';
+import $ from 'jquery';
  
 
  
@@ -40,7 +43,7 @@ function App() {
   const [formData, setFormData] = useState({});
   const [editCompany, setEditCompany] = useState(null);
   const [updating, setUpdating] = useState(false);
-  const [activeTab, setActiveTab] = useState("Home");
+  const [activeTab, setActiveTab] = useState("Order");
   const [showIntro, setShowIntro] = useState(true);
   const [showcredit, setShowCredit] = useState(false);
   const [fullerreportes, setShowFullerReportes]  = useState([]);
@@ -96,9 +99,24 @@ useEffect(() => {
   }
 
 
+
+  function showMenu(){
+
+       $('.header').toggle(); 
+  }
+
+
   function handleChangeinCompany() {
      fetchCompany();
   }
+
+  function handleCheckboxChange(e) {
+
+  const { name, checked } = e.target;
+
+  setFormData({ ...formData, [name]: checked ? 'yes' : 'no' });
+
+}
 
 
   function fetchCompany() {
@@ -191,7 +209,8 @@ useEffect(() => {
       trn:     com.company_trn,
       amount:  com.company_amount,
       address: com.company_address,
-      tax_id:  com.tax_id
+      tax_id:  com.tax_id,
+      food_order:  com.food_order
     });
     const found = tax.find(t => t.tax_id == com.tax_id);
     setselectedtax(found || {});
@@ -212,6 +231,7 @@ useEffect(() => {
     data.append('address', formData.address);
     data.append('amount',  formData.amount);
     data.append('tax_id',  formData.tax_id);
+    data.append('food_order',  formData.food_order);
 
     try {
       const res = await fetch(url + `/wp-json/taxer/v1/update`, {
@@ -231,7 +251,7 @@ useEffect(() => {
     setUpdating(false);
   }
 
-  const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax", "Order"];
+  const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax", "Order", "Customer", "Riders"];
 
 //   if (showIntro==true) {
 //   return (
@@ -307,7 +327,7 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
     
     <div className="app">
 
-     <h1>{isOnline ? '✅ Online' : '❌ Disconnected'}</h1>
+      <div className="show-menu"   onClick={showMenu}  >Show Menu</div>
 
       <div className='header'>
         <div className={`tabs ${tabColors[activeTab] || ""}`}>
@@ -360,6 +380,14 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
 
       {activeTab === "Order" && (
         <Order    />
+      )}
+
+      {activeTab === "Customer" && (
+        <Customer    />
+      )}
+
+      {activeTab === "Riders" && (
+        <Riders    />
       )}
 
       </OnlineContext.Provider>
@@ -452,6 +480,18 @@ const totalOutputTax = fullerreportes.reduce((acc, report) => {
 
             <label>Address</label>
             <input name="address" value={formData.address} onChange={handleChange} />
+
+            
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+            <input
+            type="checkbox"
+            name="food_order"
+            checked={formData.food_order === 'yes'}
+            onChange={handleCheckboxChange}
+            />
+            Enable Food Order
+            </label>
 
             <label>Tax</label>
             <select
