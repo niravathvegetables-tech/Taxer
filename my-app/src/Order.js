@@ -197,6 +197,9 @@ getCustomerById = (customer_id) => {
 
   const { items: stockItems, typeoforder } = this.parseStockDatas(order.stock_datas);
 
+   const normalizedDeliveryAmount =
+    order.delivery_amount === "NOTASSIGNED" ? "100.00" : order.delivery_amount;
+
   this.setState({
     editOrder: true,
     formData: {
@@ -209,7 +212,7 @@ getCustomerById = (customer_id) => {
       delivery_agent: order.delivery_agent,
       delivery_vehicle: order.delivery_vehicle,
       delivery_bill_amount: order.delivery_bill_amount,
-      delivery_amount: order.delivery_amount,
+      delivery_amount: normalizedDeliveryAmount,
       delivery_rider_location: order.delivery_rider_location,
       order_date: order.order_date,
     },
