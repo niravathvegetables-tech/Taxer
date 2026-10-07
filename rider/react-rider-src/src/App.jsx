@@ -2,18 +2,18 @@ import { useEffect, useState } from 'react';
 import RiderLogin from './components/RiderLogin';
 import RiderRegister from './components/RiderRegister';
 import Order from './components/Order';
+import RiderOrder from './components/RiderOrder';
 import { getCookie, deleteCookie } from './utils/cookies';
 import { REST_URL, NONCE } from './utils/api';
 import { pingRiderLocation } from './utils/locationTracker';
 import './App.css';
 import "./assets/met.css";
 
-
-
 function App() {
   const [phone, setPhone] = useState(null);
-   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [view, setView] = useState('login');
+  const [tab, setTab] = useState('orders'); // 'orders' | 'ekart'
   const [checkingSession, setCheckingSession] = useState(true);
   const [autoLoginError, setAutoLoginError] = useState('');
 
@@ -39,9 +39,6 @@ function App() {
         const data = await res.json();
 
         if (res.ok && data.success !== false) {
-
-          console.log(data.rider.name);
-
           setUser(data.rider.name);
           setPhone(savedPhone);
         } else {
@@ -59,18 +56,17 @@ function App() {
     attemptAutoLogin();
   }, []);
 
-  // ── Location tracking — pings every 10 seconds while a rider is logged in ──
-const [payments, setPayments] = useState(null);
+  const [payments, setPayments] = useState(null);
 
-// ── Location tracking — pings every 10 seconds while a rider is logged in ──
-useEffect(() => {
-  if (!phone) return;
-  pingRiderLocation(phone, setPayments);
-  const intervalId = setInterval(() => {
+  // Location tracking — pings every 10 seconds while a rider is logged in
+  useEffect(() => {
+    if (!phone) return;
     pingRiderLocation(phone, setPayments);
-  }, 10000);
-  return () => clearInterval(intervalId);
-}, [phone]);
+    const intervalId = setInterval(() => {
+      pingRiderLocation(phone, setPayments);
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }, [phone]);
 
   const handleLogout = () => {
     deleteCookie('taxer_rider_phone');
@@ -86,7 +82,10 @@ useEffect(() => {
         {autoLoginError && <p className="error">{autoLoginError}</p>}
         {view === 'login' ? (
           <RiderLogin
-            onLoginSuccess={(p) => setPhone(p)}
+            onLoginSuccess={(p, data) => {
+              setPhone(p);
+              if (data && data.rider) setUser(data.rider.name);
+            }}
             onSwitchToRegister={() => setView('register')}
           />
         ) : (
@@ -106,7 +105,29 @@ useEffect(() => {
         <span>Amount to get: {payments !== null ? payments : '—'}</span>
         <button onClick={handleLogout}>Logout</button>
       </header>
-      <Order username={user} />
+
+      <nav>
+        <button
+          className={tab === 'orders' ? 'btn-update' : 'btn-cancel'}
+          onClick={() => setTab('orders')}
+        >
+          Orders
+        </button>
+        <button
+          className={tab === 'ekart' ? 'btn-update' : 'btn-cancel'}
+          onClick={() => setTab('ekart')}
+        >
+          Ekart Orders
+        </button>
+      </nav>
+
+      {tab === 'orders' ? (
+        <Order username={user} />
+        
+        
+      ) : (
+        <RiderOrder username={user} phone={phone} />
+      )}
     </div>
   );
 }

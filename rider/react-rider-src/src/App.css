@@ -17,6 +17,32 @@
   }
 }
 
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  scrollbar-width: thin;             /* Firefox */
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 3px;
+}
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;   /* space below the heading */
+}
+
+.button-row button {
+  flex: 1 1 auto;     /* buttons share space and wrap cleanly */
+  white-space: nowrap;
+  padding: 10px 14px;
+}
+
 .hero {
   position: relative;
 
@@ -997,7 +1023,7 @@ table{
  @media screen and (max-width: 480px) { 
 .tabs ul li { display: block; }
 .mobwidth{
-  width: 100%;
+  width: 96%;
 }
 
  .orcomm.btn-update {
@@ -1505,8 +1531,19 @@ table tbody {
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--chrome-100);
-  background: var(--gm-900);
+  background: #f9f6f6;
 }
+
+.rider-app h3{
+
+  color: #007bff;
+}
+
+.hide{
+  display: none;
+}
+
+
 .rider-app header {
   display: flex;
   align-items: center;
@@ -1599,4 +1636,196 @@ table tbody {
 
 .popup button:hover {
   filter: brightness(1.08);
+}
+
+/* ============================================================
+   Ekart popup — always centred on screen (END of CSS file)
+   ============================================================ */
+
+/* wrapper: no box of its own */
+.popup {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  position: static !important;
+}
+.popup::before { display: none !important; }
+
+/* dark screen cover, pinned to the viewport */
+.popup .modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  margin: 0 !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+}
+
+/* the card */
+.popup .modal-box,
+.popup .modal-box.modalpos {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  height: auto !important;
+  max-height: 90vh !important;
+  max-height: 90dvh !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  background: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.popup .modal-box h2 {
+  font-size: 18px !important;
+  margin: 0 0 8px !important;
+  color: #0073aa !important;
+  text-shadow: none !important;
+}
+
+.popup .modal-box label {
+  display: block;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #1f2937;
+  margin-top: 4px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.popup .modal-box input,
+.popup .modal-box select {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px !important;
+  font-size: 16px !important;   /* stops iPhone zoom on focus */
+  color: #111 !important;
+  background: #fff !important;
+  border: 1px solid #ccc !important;
+  border-radius: 6px !important;
+}
+
+.popup .modal-box h3 {
+  font-size: 14px;
+  margin: 6px 0 0;
+  color: #333;
+  word-break: break-word;
+}
+
+.popup .modal-box span { word-break: break-word; }
+
+.popup .modal-box button {
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  font-size: 15px !important;
+}
+
+.popup .modal-box .modal-buttons {
+  display: flex !important;
+  gap: 10px;
+  margin-top: 12px !important;
+  padding: 10px 0 2px;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+}
+.popup .modal-box .modal-buttons button { flex: 1; }
+
+/* tablets / desktop: a bit roomier */
+@media (min-width: 601px) {
+  .popup .modal-box,
+  .popup .modal-box.modalpos {
+    max-width: 520px !important;
+    padding: 24px !important;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: hidden;   /* no sideways scroll, table is now card-style */
+    width: 100%;
+  }
+
+  .order-table {
+    min-width: 0 !important;   /* kills the 700px minimum */
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .order-table,
+  .order-table tbody,
+  .order-table tr,
+  .order-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* hide header row; labels come from data-label */
+  .order-table thead {
+    display: none;
+  }
+
+  .order-table tr {
+    margin-bottom: 14px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    padding: 6px;
+  }
+
+  .order-table td {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 8px 8px 42%;   /* room for the label */
+    position: relative;
+    min-height: 34px;
+    font-size: 13px;            /* 9px was too small */
+    color: #1a3a4a;             /* white text was hard to read */
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .order-table td:last-child {
+    border-bottom: none;
+  }
+
+  .order-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    width: 36%;
+    font-weight: 700;
+    font-size: 12px;
+    color: #000;
+  }
 }

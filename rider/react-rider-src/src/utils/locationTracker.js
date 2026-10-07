@@ -5,8 +5,11 @@ export function pingRiderLocation(phone, onPaymentsUpdate) {
     console.warn('Geolocation not supported by this browser.');
     return;
   }
+
+  
   navigator.geolocation.getCurrentPosition(
     async (position) => {
+      return;
       const { latitude, longitude } = position.coords;
       try {
         const res = await fetch(`${REST_URL}updateriderlocation`, {
